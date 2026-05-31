@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="tv-wa" content="REPLACE_WITH_WHATSAPP_NUMBER"/>
+<meta name="tv-email" content="travenciaagency@gmail.com"/>
+<title>Contact — Travencia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Bebas+Neue&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/main.css"/>
+<style>
+.page-hero{position:relative;height:340px;overflow:hidden;display:flex;align-items:flex-end;padding:0 56px 48px;margin-top:74px}
+.ph-bg{position:absolute;inset:0;background-image:url('images/Morocco.png');background-size:cover;background-position:center}
+.ph-grad{position:absolute;inset:0;background:linear-gradient(160deg,rgba(4,8,15,.72),rgba(4,8,15,.9))}
+.ph-content{position:relative;z-index:2}
+.ph-eyebrow{font-size:.67rem;letter-spacing:.34em;text-transform:uppercase;color:var(--sky2);background:rgba(45,114,210,.08);border:1px solid rgba(45,114,210,.22);padding:4px 13px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.ph-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,5vw,4rem);letter-spacing:.04em;color:var(--white);line-height:1;margin-bottom:8px}
+.ph-title .g{color:var(--gold2)}
+.ph-sub{font-size:.88rem;color:var(--muted);max-width:500px}
+
+.contact-wrap{display:grid;grid-template-columns:1fr 1.6fr;gap:56px;align-items:start}
+.contact-info-panel{}
+.ci-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--white);letter-spacing:.05em;margin-bottom:14px}
+.ci-title .g{color:var(--gold2)}
+.ci-text{font-size:.86rem;color:var(--muted);line-height:1.78;margin-bottom:28px}
+.contact-details{display:flex;flex-direction:column;gap:14px;margin-bottom:32px}
+.cd-item{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--card);border:1px solid var(--border);border-radius:10px;transition:all .3s}
+.cd-item:hover{border-color:rgba(45,114,210,.3)}
+.cd-icon{width:42px;height:42px;background:rgba(45,114,210,.1);border:1px solid rgba(45,114,210,.2);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cd-icon svg{width:20px;height:20px;stroke:var(--sky2);fill:none;stroke-width:1.8}
+.cd-label{font-size:.66rem;color:var(--faint);text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px}
+.cd-value{font-size:.88rem;color:var(--white);font-weight:500}
+.cd-sub{font-size:.76rem;color:var(--muted)}
+
+/* FAQ */
+.faq-list{display:flex;flex-direction:column;gap:10px;margin-top:28px}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.faq-q{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .3s;gap:14px}
+.faq-q:hover{background:rgba(45,114,210,.05)}
+.faq-q-text{font-size:.88rem;font-weight:600;color:var(--text)}
+.faq-arrow{width:20px;height:20px;border-radius:50%;border:1px solid rgba(45,114,210,.3);display:flex;align-items:center;justify-content:center;color:var(--sky2);font-size:.7rem;flex-shrink:0;transition:all .3s}
+.faq-item.open .faq-arrow{transform:rotate(180deg);background:rgba(45,114,210,.1)}
+.faq-a{display:none;padding:0 20px 16px;font-size:.83rem;color:var(--muted);line-height:1.72}
+.faq-item.open .faq-a{display:block}
+
+/* Contact form */
+.contact-form-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rLg);padding:36px;backdrop-filter:blur(12px)}
+.cf-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--white);letter-spacing:.06em;margin-bottom:6px}
+.cf-sub{font-size:.82rem;color:var(--muted);margin-bottom:26px;line-height:1.6}
+.subject-btns{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.sb-btn{padding:6px 16px;border-radius:16px;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;border:1.5px solid rgba(45,114,210,.2);background:transparent;color:var(--muted);cursor:pointer;transition:all .3s}
+.sb-btn.active,.sb-btn:hover{background:rgba(45,114,210,.1);border-color:var(--sky2);color:var(--white)}
+
+/* Success state */
+.success-state{text-align:center;padding:40px 20px;display:none}
+.success-state.show{display:block}
+.success-icon{width:64px;height:64px;background:rgba(37,211,102,.12);border:2px solid #25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px}
+.success-icon svg{width:28px;height:28px;stroke:#25D366;fill:none;stroke-width:2.5}
+</style>
+</head>
+<body>
+
+<nav class="navbar" id="nb">
+  <div class="nb-brand" onclick="location.href='index.html'">
+    <img src="images/Travencia.png" alt="Travencia" class="nb-logo"/>
+    <div class="nb-text"><span class="nb-name">Travencia</span><span class="nb-tag">Explore · Dream · Discover</span></div>
+  </div>
+  <div class="nb-links">
+    <a href="index.html">Home</a>
+    <a href="destinations.html">Destinations</a>
+    <a href="activities.html">Activities</a>
+    <a href="services.html">Services</a>
+    <a href="contact.html" class="active">Contact</a>
+  </div>
+  <div class="nb-right" id="nbRight">
+    <button class="btn-ghost" onclick="openAuth('login')">Sign In</button>
+    <button class="btn-cta" onclick="location.href='destinations.html'">Book a Trip</button>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="ph-bg"></div>
+  <div class="ph-grad"></div>
+  <div class="ph-content">
+    <div class="ph-eyebrow">We Are Here For You</div>
+    <h1 class="ph-title">Let's Plan <span class="g">Your Trip</span></h1>
+    <p class="ph-sub">Whether it's a destination question, a custom itinerary, or a group of 20 — our team is reachable in minutes on WhatsApp, any time of day.</p>
+  </div>
+</div>
+
+<!-- CONTACT SECTION -->
+<section class="section" id="contact">
+  <div class="contact-wrap">
+
+    <!-- LEFT: Info + FAQ -->
+    <div class="contact-info-panel reveal">
+      <h2 class="ci-title">Talk to Our <span class="g">Travel Experts</span></h2>
+      <div class="gold-rule"></div>
+      <p class="ci-text">We don't use chatbots. A real travel specialist handles every enquiry — whether you're comparing destinations, fine-tuning an itinerary, or coordinating a group trip across continents.</p>
+      <div class="contact-details">
+        <div class="cd-item">
+          <div class="cd-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div>
+            <div class="cd-label">WhatsApp Business</div>
+            <div class="cd-value">+237 6XX XXX XXX</div>
+            <div class="cd-sub">Available 24/7 — Fastest response</div>
+          </div>
+        </div>
+        <div class="cd-item">
+          <div class="cd-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="cd-label">Email</div>
+            <div class="cd-value">travenciaagency@gmail.com</div>
+            <div class="cd-sub">Response within 24 hours</div>
+          </div>
+        </div>
+        <div class="cd-item">
+          <div class="cd-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="cd-label">Office</div>
+            <div class="cd-value">Douala, Cameroon</div>
+            <div class="cd-sub">Serving clients globally</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <h3 style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;color:var(--white);letter-spacing:.06em;margin-bottom:16px">Frequently Asked <span style="color:var(--gold2)">Questions</span></h3>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">What is included in the package price?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-a">Every Travencia package covers return flights, hotel accommodation for your full stay, and private airport transfers — all in one price. Optional activities are add-ons you select during booking, priced per person. Your total is always calculated based on your departure country, so there are no hidden flight surcharges.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">How does payment verification work?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-a">Once you submit your booking, our team receives the details instantly via WhatsApp. We review your payment information and send a personal confirmation — usually within 2 hours. For PayPal bookings, we provide our payment address and reference code directly.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Can I make multiple reservations?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-a">Absolutely. After each booking you can immediately start another. All your pending reservations are visible in your account under "My Bookings" — each with its own status, code, and confirmation timeline.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Why does the price differ by country?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-a">Flight costs are the biggest variable in any travel package, and they differ enormously by origin. A round-trip from Douala to Tokyo costs nearly twice as much as one from Paris. Our pricing engine knows your departure country and adjusts the flight component automatically — so every quote is honest and accurate.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Can I cancel or modify my reservation?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-a">Yes — contact us on WhatsApp with your booking code. Modifications are straightforward before admin confirms. Once confirmed, cancellation terms depend on the airline and hotel selected; our team will walk you through every option and any applicable fees.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            <span class="faq-q-text">Do you offer group travel discounts?</span>
+            <span class="faq-arrow">&#9660;</span>
+          </div>
+          <div class="faq-a">Yes — parties of 6 or more unlock negotiated group rates on flights, hotels, and transfers. Reach out via WhatsApp or the form below and we'll build a custom quote tailored to your group size and destination.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Contact Form -->
+    <div class="reveal">
+      <div class="contact-form-card">
+        <div id="formContent">
+          <div class="cf-title">Send Us a Message</div>
+          <p class="cf-sub">Complete the form below and a travel specialist will reach out on WhatsApp within 2 hours.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="fg"><label>First Name *</label><input type="text" id="cf_fn" placeholder="Jean"/></div>
+            <div class="fg"><label>Last Name *</label><input type="text" id="cf_ln" placeholder="Dupont"/></div>
+          </div>
+          <div class="fg"><label>Email Address *</label><input type="email" id="cf_email" placeholder="jean@email.com"/></div>
+          <div class="fg"><label>WhatsApp Number *</label><input type="tel" id="cf_phone" placeholder="+237 6XX XXX XXX"/></div>
+          <div class="fg"><label>Subject</label>
+            <div class="subject-btns" id="subjectBtns">
+              <button class="sb-btn active" data-s="Trip Inquiry" onclick="selSubject(this)">Trip Inquiry</button>
+              <button class="sb-btn" data-s="Custom Package" onclick="selSubject(this)">Custom Package</button>
+              <button class="sb-btn" data-s="Group Travel" onclick="selSubject(this)">Group Travel</button>
+              <button class="sb-btn" data-s="Vehicle Service" onclick="selSubject(this)">Vehicle Service</button>
+              <button class="sb-btn" data-s="Other" onclick="selSubject(this)">Other</button>
+            </div>
+          </div>
+          <div class="fg"><label>Destination of Interest</label>
+            <select id="cf_dest"><option value="">Select a destination (optional)</option></select>
+          </div>
+          <div class="fg"><label>Your Message *</label><textarea id="cf_msg" placeholder="Tell us about your dream trip, group size, dates, budget, or any questions..."></textarea></div>
+          <div class="gerr" id="cf_err"></div>
+          <button class="btn-whatsapp" style="margin-top:8px" onclick="sendContact()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Send via WhatsApp
+          </button>
+        </div>
+        <!-- Success state -->
+        <div class="success-state" id="successState">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--white);letter-spacing:.08em;margin-bottom:10px">Message Sent!</div>
+          <p style="font-size:.86rem;color:var(--muted);line-height:1.75;max-width:360px;margin:0 auto 22px">Your WhatsApp has been opened with your message pre-filled. Our team will respond within 2 hours.</p>
+          <button class="btn-outline" onclick="resetForm()">Send Another Message</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div><img src="images/Travencia.png" alt="Travencia" class="ft-logo"/><div class="ft-name">Travencia</div><p class="ft-tagline">Flights, hotels, activities, and private transfers — every detail handled, every destination mastered.</p></div>
+    <div><div class="ft-col-h">Destinations</div><ul class="ft-links"><li><a href="destinations.html">All Destinations</a></li><li><a href="destinations.html">Bali</a></li><li><a href="destinations.html">Dubai</a></li><li><a href="destinations.html">Maldives</a></li></ul></div>
+    <div><div class="ft-col-h">Services</div><ul class="ft-links"><li><a href="activities.html">Activities</a></li><li><a href="services.html">Vehicle Transfers</a></li><li><a href="services.html">Personal Driver</a></li></ul></div>
+    <div><div class="ft-col-h">Quick Links</div><ul class="ft-links"><li><a href="index.html">Home</a></li><li><a href="contact.html">Contact</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
+  </div>
+  <div class="ft-bot"><span class="ft-copy">© 2026 Travencia. All rights reserved.</span><span class="ft-copy">Explore · Dream · Discover</span></div>
+</footer>
+
+<!-- AUTH -->
+
+
+<script src="js/data.js"></script>
+<script>
+// Wait for data.js to be ready
+if (typeof window.TV === 'undefined') {
+  console.error('data.js failed to load!');
+} else {
+  const {DESTINATIONS, ACCOMMODATIONS, ACTIVITIES, COUNTRIES, fmt, calcPrice, sendWA, genCode, ADMIN_WHATSAPP, ADMIN_PAYPAL_EMAIL} = window.TV;
+}
+let activeSubject = 'Trip Inquiry';
+
+// Populate destination dropdown
+function populateDests(){
+  const sel = document.getElementById('cf_dest');
+  DESTINATIONS.forEach(d => sel.add(new Option(`${d.name}, ${d.country}`, d.name)));
+}
+
+function selSubject(btn){
+  document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  activeSubject = btn.dataset.s;
+}
+
+function sendContact(){
+  const fn = document.getElementById('cf_fn').value.trim();
+  const ln = document.getElementById('cf_ln').value.trim();
+  const email = document.getElementById('cf_email').value.trim();
+  const phone = document.getElementById('cf_phone').value.trim();
+  const dest = document.getElementById('cf_dest').value;
+  const msg = document.getElementById('cf_msg').value.trim();
+  const err = document.getElementById('cf_err');
+
+  if(!fn || !email || !phone || !msg){
+    err.textContent = 'Please fill in all required fields (name, email, WhatsApp, and message).';
+    err.style.display = 'block';
+    return;
+  }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    err.textContent = 'Please enter a valid email address.';
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+
+  const waMsg = `TRAVENCIA INQUIRY\n\nSubject: ${activeSubject}\nFrom: ${fn} ${ln}\nEmail: ${email}\nWhatsApp: ${phone}\n${dest?`Destination: ${dest}\n`:''}\nMessage:\n${msg}`;
+  sendWA(ADMIN_WHATSAPP, waMsg);
+
+  // Show success
+  document.getElementById('formContent').style.display = 'none';
+  document.getElementById('successState').classList.add('show');
+}
+
+function resetForm(){
+  document.getElementById('cf_fn').value = '';
+  document.getElementById('cf_ln').value = '';
+  document.getElementById('cf_email').value = '';
+  document.getElementById('cf_phone').value = '';
+  document.getElementById('cf_dest').value = '';
+  document.getElementById('cf_msg').value = '';
+  document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector('.sb-btn[data-s="Trip Inquiry"]').classList.add('active');
+  activeSubject = 'Trip Inquiry';
+  document.getElementById('formContent').style.display = 'block';
+  document.getElementById('successState').classList.remove('show');
+}
+
+function toggleFaq(q){
+  const item = q.closest('.faq-item');
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+  if(!wasOpen) item.classList.add('open');
+}
+
+
+function openM(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeM(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeM(o.id);}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.overlay.open').forEach(o=>closeM(o.id));});
+function observeReveal(){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));}
+window.addEventListener('scroll',()=>document.getElementById('nb').classList.toggle('scrolled',window.scrollY>60));
+populateDests();observeReveal();
+</script>
+<script src="auth.js"></script>
+</body>
+</html>
