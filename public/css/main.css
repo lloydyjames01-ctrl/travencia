@@ -259,3 +259,77 @@ footer{background:var(--navy2);border-top:1px solid var(--border);padding:60px 4
    ═══════════════════════════════════════════════════════════ */
 @media(max-width:900px){.section{padding:60px 24px}}
 @media(max-width:600px){.section{padding:44px 16px}.modal{border-radius:14px}}
+
+/* ═══════════════════════════════════════════════════════════
+   BOOKING-SPECIFIC BUTTONS
+   ═══════════════════════════════════════════════════════════ */
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: transparent;
+  color: var(--muted);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: .82rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  transition: all .2s;
+  cursor: pointer;
+  font-family: var(--font);
+}
+.btn-back:hover {
+  color: var(--white);
+  border-color: var(--sky2);
+  background: rgba(45,114,210,.08);
+}
+
+/* Payment tiles */
+.pay-tile {
+  border-radius: 12px;
+  border: 2px solid rgba(255,255,255,.08);
+  padding: 16px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .3s;
+  background: rgba(255,255,255,.03);
+}
+.pay-tile:hover {
+  border-color: rgba(255,255,255,.2);
+  background: rgba(255,255,255,.06);
+  transform: translateY(-2px);
+}
+.pay-tile.active {
+  border-color: var(--gold2);
+  background: rgba(200,149,32,.07);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(200,149,32,.12);
+}
+.pay-tile-icon { font-size: 1.8rem; margin-bottom: 6px; display: block; }
+.pay-tile-label {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+/* Submit booking button */
+.wcm-submit {
+  flex: 2;
+  padding: 14px;
+  background: linear-gradient(130deg, #25D366, #1ab854);
+  color: #fff;
+  font-size: .9rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  border-radius: 9px;
+  border: none;
+  cursor: pointer;
+  transition: all .3s;
+  font-family: var(--font);
+}
+.wcm-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(37,211,102,.25); }
