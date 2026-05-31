@@ -4,13 +4,152 @@
  * Contact: travenciaagency@gmail.com
  */
 
-const express = require('express');
-const mysql   = require('mysql2/promise');
-const cors    = require('cors');
-const bcrypt  = require('bcrypt');
-const jwt     = require('jsonwebtoken');
-const path    = require('path');
+const express    = require('express');
+const mysql      = require('mysql2/promise');
+const cors       = require('cors');
+const bcrypt     = require('bcrypt');
+const jwt        = require('jsonwebtoken');
+const path       = require('path');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
+
+// ── Email transporter ──────────────────────────────────────
+// Set SMTP_HOST / SMTP_PORT / SMTP_USER / SMTP_PASS in .env
+// e.g. Gmail: SMTP_HOST=smtp.gmail.com, SMTP_PORT=465, SMTP_USER=yourmail@gmail.com, SMTP_PASS=app_password
+const transporter = nodemailer.createTransport({
+  host:   process.env.SMTP_HOST || 'smtp.gmail.com',
+  port:   Number(process.env.SMTP_PORT) || 465,
+  secure: Number(process.env.SMTP_PORT) === 465 || !process.env.SMTP_PORT,
+  auth: {
+    user: process.env.SMTP_USER || '',
+    pass: process.env.SMTP_PASS || '',
+  },
+});
+
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'travenciaagency@gmail.com';
+const ADMIN_PHONE = process.env.ADMIN_PHONE || '+1 (308) 253-3668';
+const SITE_NAME   = 'Travencia';
+
+async function sendMail({ to, subject, html }) {
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    console.log('[email] SMTP not configured — skipping. Would send to:', to, '|', subject);
+    return;
+  }
+  try {
+    await transporter.sendMail({
+      from: `"${SITE_NAME}" <${process.env.SMTP_USER}>`,
+      to, subject, html,
+    });
+    console.log('[email] Sent to', to);
+  } catch (e) {
+    console.error('[email] Failed:', e.message);
+  }
+}
+
+// ── Email templates ────────────────────────────────────────
+function emailBase(body) {
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"/><style>
+    body{font-family:Arial,sans-serif;background:#04080F;color:#D8E4F8;margin:0;padding:0}
+    .wrap{max-width:600px;margin:0 auto;padding:32px 24px}
+    .logo{font-size:2rem;font-weight:900;letter-spacing:.1em;color:#E8B030;margin-bottom:4px}
+    .logo span{color:#5090E0}
+    .card{background:#0C1628;border:1px solid rgba(45,114,210,.25);border-radius:14px;padding:28px 32px;margin-top:20px}
+    h2{color:#fff;margin:0 0 16px;font-size:1.3rem}
+    .row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(45,114,210,.1);font-size:.9rem}
+    .row:last-child{border:none}
+    .lbl{color:#7A90B8}.val{color:#fff;font-weight:600;text-align:right}
+    .total{background:rgba(200,149,32,.08);border:1px solid rgba(200,149,32,.25);border-radius:8px;padding:14px 18px;margin-top:14px;text-align:center}
+    .total-lbl{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#7A90B8;margin-bottom:4px}
+    .total-val{font-size:1.8rem;font-weight:900;color:#E8B030}
+    .badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:18px}
+    .badge-pend{background:rgba(217,119,6,.15);color:#fbbf24;border:1px solid rgba(217,119,6,.3)}
+    .badge-conf{background:rgba(24,160,88,.15);color:#40c878;border:1px solid rgba(24,160,88,.3)}
+    .badge-canc{background:rgba(224,48,48,.15);color:#f06060;border:1px solid rgba(224,48,48,.3)}
+    .cta{display:inline-block;padding:13px 28px;border-radius:8px;font-weight:700;font-size:.88rem;text-decoration:none;letter-spacing:.06em;text-transform:uppercase;margin-top:18px}
+    .cta-green{background:linear-gradient(135deg,#25D366,#1ab854);color:#fff}
+    .cta-blue{background:linear-gradient(135deg,#2D72D2,#1340A0);color:#fff}
+    .ft{text-align:center;font-size:.76rem;color:#3A4F72;margin-top:28px;line-height:1.7}
+  </style></head><body><div class="wrap">
+    <div class="logo">TRAV<span>ENCIA</span></div>
+    <div style="font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:#7A90B8;margin-bottom:18px">Explore · Dream · Discover</div>
+    ${body}
+    <div class="ft">&copy; ${new Date().getFullYear()} Travencia &bull; travenciaagency@gmail.com &bull; ${ADMIN_PHONE}</div>
+  </div></body></html>`;
+}
+
+function emailNewBooking(res) {
+  const rows = [
+    ['Code',          res.reservation_code],
+    ['Destination',   res.dest_name || res.dest_name_override || '—'],
+    ['Guest',         `${res.first_name} ${res.last_name}`],
+    ['Email',         res.email],
+    ['WhatsApp',      res.phone || '—'],
+    ['Dates',         `${res.departure_date} → ${res.return_date}`],
+    ['Guests',        `${res.num_adults} adult(s)${res.num_children ? ' + ' + res.num_children + ' child(ren)' : ''}`],
+    ['Payment',       res.payment_method],
+  ].map(([l,v]) => `<div class="row"><span class="lbl">${l}</span><span class="val">${v}</span></div>`).join('');
+  return emailBase(`
+    <div class="card">
+      <span class="badge badge-pend">New Booking</span>
+      <h2>✈️ New Reservation Received</h2>
+      ${rows}
+      <div class="total"><div class="total-lbl">Total Due</div><div class="total-val">$${Number(res.total_amount||0).toLocaleString()} USD</div></div>
+      <p style="font-size:.82rem;color:#7A90B8;margin-top:16px">Log in to the admin panel to review, confirm, or reject this reservation.</p>
+    </div>`);
+}
+
+function emailBookingStatus(res, status, adminNote) {
+  const isConf = status === 'confirmed';
+  const isCanc = status === 'cancelled';
+  const badge  = isConf ? 'badge-conf' : isCanc ? 'badge-canc' : 'badge-pend';
+  const label  = isConf ? 'Confirmed ✅' : isCanc ? 'Cancelled ❌' : status;
+  const msg    = isConf
+    ? `<p>Great news! Your reservation <strong style="color:#E8B030">${res.reservation_code}</strong> has been <strong style="color:#40c878">confirmed</strong> by our team. We will be in touch to finalise payment and travel details.</p>`
+    : isCanc
+    ? `<p>Your reservation <strong style="color:#E8B030">${res.reservation_code}</strong> has been <strong style="color:#f06060">cancelled</strong>. If you have questions, please contact us.</p>`
+    : `<p>Your reservation <strong style="color:#E8B030">${res.reservation_code}</strong> status has been updated to: <strong>${status}</strong>.</p>`;
+  const noteBlock = adminNote ? `<div style="background:rgba(45,114,210,.1);border:1px solid rgba(45,114,210,.2);border-radius:8px;padding:12px 16px;margin-top:14px;font-size:.85rem;color:#D8E4F8"><strong style="color:#5090E0">Note from Travencia:</strong><br/>${adminNote}</div>` : '';
+  return emailBase(`
+    <div class="card">
+      <span class="badge ${badge}">${label}</span>
+      <h2>Your Reservation Update</h2>
+      ${msg}
+      ${noteBlock}
+      <div class="total"><div class="total-lbl">Total Amount</div><div class="total-val">$${Number(res.total_amount||0).toLocaleString()} USD</div></div>
+      <p style="margin-top:18px;font-size:.82rem;color:#7A90B8">For any questions, reach us on WhatsApp or email — we respond within 2 hours.</p>
+      <a class="cta cta-green" href="https://wa.me/${(ADMIN_PHONE||'').replace(/\D/g,'')}">Contact on WhatsApp</a>
+    </div>`);
+}
+
+function emailContactAdmin({ first_name, last_name, email, phone, subject, destination, message }) {
+  return emailBase(`
+    <div class="card">
+      <span class="badge badge-pend">New Inquiry</span>
+      <h2>📩 New Contact Form Submission</h2>
+      ${[
+        ['Name',        `${first_name} ${last_name||''}`],
+        ['Email',       email],
+        ['Phone',       phone||'—'],
+        ['Subject',     subject||'—'],
+        ['Destination', destination||'—'],
+      ].map(([l,v])=>`<div class="row"><span class="lbl">${l}</span><span class="val">${v}</span></div>`).join('')}
+      <div style="margin-top:16px;background:rgba(45,114,210,.08);border:1px solid rgba(45,114,210,.15);border-radius:8px;padding:14px 16px;font-size:.88rem;line-height:1.7">${message.replace(/\n/g,'<br/>')}</div>
+    </div>`);
+}
+
+function emailContactReply({ name, email }) {
+  return emailBase(`
+    <div class="card">
+      <h2>Message Received!</h2>
+      <p>Hi <strong style="color:#E8B030">${name}</strong>,</p>
+      <p style="line-height:1.75">Thank you for reaching out to Travencia. Our travel specialists have received your message and will respond within <strong>2 hours</strong>.</p>
+      <p style="line-height:1.75">For faster assistance you can also reach us directly:</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+        <a class="cta cta-green" href="https://wa.me/${(ADMIN_PHONE||'').replace(/\D/g,'')}">WhatsApp Us</a>
+        <a class="cta cta-blue" href="mailto:${ADMIN_EMAIL}">Email Us</a>
+      </div>
+    </div>`);
+}
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -241,6 +380,22 @@ app.post('/api/reservations', authMiddleware, async (req, res) => {
     );
 
     res.json({ success: true, data: { id: result.insertId, reservation_code: code, status: 'pending' } });
+
+    // Notify admin by email (non-blocking)
+    try {
+      const [[resRow]] = await db.query(
+        `SELECT r.*, COALESCE(r.dest_name_override, d.name, 'Unknown') AS dest_name
+         FROM reservations r LEFT JOIN destinations d ON r.destination_id=d.id
+         WHERE r.id=?`, [result.insertId]
+      );
+      if (resRow) {
+        sendMail({
+          to: ADMIN_EMAIL,
+          subject: `[Travencia] New Booking ${code} — ${resRow.dest_name} — $${resRow.total_amount}`,
+          html: emailNewBooking(resRow)
+        });
+      }
+    } catch(e){ console.warn('[notify]', e.message); }
   } catch (e) { res.status(500).json({ success: false, error: e.message }); }
 });
 
@@ -287,6 +442,10 @@ app.post('/api/contact', async (req, res) => {
       'INSERT INTO contact_inquiries (first_name,last_name,email,phone,subject,destination,message,ip_address) VALUES (?,?,?,?,?,?,?,?)',
       [first_name, last_name || '', email, phone || null, subject || null, destination || null, message, req.ip]
     );
+    // Send emails in background
+    const data = { first_name, last_name, email, phone, subject, destination, message };
+    sendMail({ to: ADMIN_EMAIL, subject: `[Travencia] New Contact: ${subject || 'Inquiry'} — ${first_name} ${last_name||''}`, html: emailContactAdmin(data) });
+    sendMail({ to: email, subject: 'Travencia — We received your message', html: emailContactReply({ name: first_name, email }) });
     res.json({ success: true, data: { id: result.insertId } });
   } catch (e) { res.status(500).json({ success: false, error: e.message }); }
 });
@@ -385,6 +544,24 @@ app.patch('/api/admin/reservations/:id/status', adminOnly, async (req, res) => {
       `UPDATE reservations SET status=?, admin_notes=COALESCE(?,admin_notes)${extra}, updated_at=NOW() WHERE id=?`,
       [status, admin_notes || null, req.params.id]
     );
+    // Email client
+    if (status === 'confirmed' || status === 'cancelled') {
+      try {
+        const [[resRow]] = await db.query(
+          `SELECT r.*, COALESCE(r.dest_name_override, d.name, 'Unknown') AS dest_name
+           FROM reservations r LEFT JOIN destinations d ON r.destination_id=d.id
+           WHERE r.id=?`, [req.params.id]
+        );
+        if (resRow && resRow.email) {
+          const subjLabel = status === 'confirmed' ? 'Confirmed ✅' : 'Cancelled ❌';
+          sendMail({
+            to: resRow.email,
+            subject: `Travencia — Reservation ${resRow.reservation_code} ${subjLabel}`,
+            html: emailBookingStatus(resRow, status, admin_notes)
+          });
+        }
+      } catch(e){ console.warn('[status-email]', e.message); }
+    }
     res.json({ success: true });
   } catch (e) { res.status(500).json({ success: false, error: e.message }); }
 });
