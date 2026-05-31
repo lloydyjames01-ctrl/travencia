@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+  <meta name="tv-wa" content="REPLACE_WITH_WHATSAPP_NUMBER"/>
+  <meta name="tv-email" content="travenciaagency@gmail.com"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Travencia — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Bebas+Neue&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#04080F;--navy2:#080E1C;--navy3:#0C1628;--navy4:#111E38;
+  --blue:#1340A0;--blue2:#1A4FBB;--sky:#2D72D2;--sky2:#5090E0;
+  --gold:#C89520;--gold2:#E8B030;--gold3:#F5CA60;
+  --white:#FFFFFF;--text:#D8E4F8;--muted:#7A90B8;
+  --faint:#3A4F72;--success:#18A058;--danger:#E03030;--warn:#D97706;
+  --card:rgba(12,22,40,0.9);--border:rgba(45,114,210,0.18);
+  --r:10px;--font:'Plus Jakarta Sans',sans-serif;--disp:'Bebas Neue',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--navy);color:var(--text);min-height:100vh;font-size:14px}
+a{color:inherit;text-decoration:none}
+
+/* ── Login screen ─────────────────────────────────────────── */
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(ellipse at 30% 20%,#0a1830 0%,var(--navy) 70%)}
+.login-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:44px 40px;width:380px;max-width:94vw;box-shadow:0 32px 80px rgba(0,0,0,.6)}
+.login-logo{font-family:var(--disp);font-size:2rem;color:var(--gold2);letter-spacing:.08em;margin-bottom:6px}
+.login-sub{color:var(--muted);font-size:.82rem;margin-bottom:28px}
+.lg{display:flex;flex-direction:column;gap:14px}
+.lg input{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--white);font-family:var(--font);font-size:.92rem;outline:none;transition:border .2s}
+.lg input:focus{border-color:var(--sky)}
+.lg button{background:linear-gradient(135deg,var(--sky),var(--blue2));color:#fff;border:none;border-radius:8px;padding:12px;font-weight:700;font-size:.95rem;cursor:pointer;transition:opacity .2s}
+.lg button:hover{opacity:.88}
+.lg-err{color:var(--danger);font-size:.8rem;min-height:18px}
+
+/* ── Shell ───────────────────────────────────────────────── */
+#shell{display:none}
+.sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:rgba(8,14,28,.97);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;padding:24px 0}
+.sb-logo{font-family:var(--disp);font-size:1.5rem;color:var(--gold2);letter-spacing:.1em;padding:0 22px 24px;border-bottom:1px solid var(--border)}
+.sb-logo span{font-size:.7rem;display:block;font-family:var(--font);color:var(--muted);letter-spacing:.05em;font-weight:500}
+nav{flex:1;padding:18px 0}
+.nav-item{display:flex;align-items:center;gap:11px;padding:11px 22px;cursor:pointer;color:var(--muted);font-weight:600;font-size:.85rem;transition:all .2s;border-left:3px solid transparent}
+.nav-item:hover{color:var(--text);background:rgba(45,114,210,.08)}
+.nav-item.active{color:var(--gold2);border-left-color:var(--gold2);background:rgba(232,176,48,.06)}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-badge{margin-left:auto;background:var(--danger);color:#fff;font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:10px}
+.sb-foot{padding:18px 22px;border-top:1px solid var(--border)}
+.sb-foot button{width:100%;background:rgba(224,48,48,.12);border:1px solid rgba(224,48,48,.3);color:var(--danger);border-radius:7px;padding:9px;cursor:pointer;font-family:var(--font);font-weight:600;font-size:.82rem;transition:background .2s}
+.sb-foot button:hover{background:rgba(224,48,48,.22)}
+
+.main{margin-left:220px;padding:28px 32px;min-height:100vh}
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.page-title{font-family:var(--disp);font-size:1.7rem;color:var(--white);letter-spacing:.06em}
+.page-sub{font-size:.8rem;color:var(--muted);margin-top:2px}
+
+/* ── Stats cards ─────────────────────────────────────────── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:28px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px}
+.stat-val{font-family:var(--disp);font-size:2rem;letter-spacing:.04em;line-height:1}
+.stat-lbl{font-size:.75rem;color:var(--muted);margin-top:5px;font-weight:500}
+.stat-card.gold .stat-val{color:var(--gold2)}
+.stat-card.green .stat-val{color:#34d399}
+.stat-card.red .stat-val{color:var(--danger)}
+.stat-card.blue .stat-val{color:var(--sky2)}
+.stat-card.warn .stat-val{color:#fbbf24}
+
+/* ── Toolbar ─────────────────────────────────────────────── */
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.tb-search{flex:1;min-width:200px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--white);font-family:var(--font);font-size:.85rem;outline:none}
+.tb-search:focus{border-color:var(--sky)}
+.tb-filter{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:var(--font);font-size:.82rem;outline:none;cursor:pointer}
+
+/* ── Table ───────────────────────────────────────────────── */
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+thead th{padding:11px 14px;text-align:left;font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);background:rgba(0,0,0,.2);white-space:nowrap}
+tbody tr{border-bottom:1px solid rgba(45,114,210,.07);transition:background .15s}
+tbody tr:hover{background:rgba(45,114,210,.06)}
+tbody tr:last-child{border-bottom:none}
+td{padding:11px 14px;vertical-align:middle;font-size:.83rem}
+.td-code{font-family:monospace;font-size:.78rem;color:var(--gold3);font-weight:700}
+.td-name{font-weight:600;color:var(--white)}
+.td-muted{color:var(--muted);font-size:.78rem}
+
+/* ── Status badges ───────────────────────────────────────── */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.badge-pending{background:rgba(251,191,36,.12);color:#fbbf24}
+.badge-confirmed{background:rgba(52,211,153,.12);color:#34d399}
+.badge-cancelled{background:rgba(224,48,48,.12);color:var(--danger)}
+.badge-completed{background:rgba(45,114,210,.15);color:var(--sky2)}
+.badge-new{background:rgba(251,191,36,.12);color:#fbbf24}
+.badge-read{background:rgba(45,114,210,.12);color:var(--sky2)}
+.badge-replied{background:rgba(52,211,153,.12);color:#34d399}
+.badge-closed{background:rgba(120,120,120,.15);color:var(--muted)}
+
+/* ── Action buttons ──────────────────────────────────────── */
+.actions{display:flex;gap:6px;align-items:center}
+.btn-icon{background:none;border:1px solid var(--border);border-radius:7px;padding:6px 10px;cursor:pointer;color:var(--text);font-size:.75rem;font-weight:600;font-family:var(--font);display:flex;align-items:center;gap:5px;transition:all .2s;white-space:nowrap}
+.btn-icon svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.btn-icon:hover{background:rgba(255,255,255,.07)}
+.btn-icon.green{border-color:rgba(52,211,153,.35);color:#34d399}
+.btn-icon.green:hover{background:rgba(52,211,153,.1)}
+.btn-icon.red{border-color:rgba(224,48,48,.35);color:var(--danger)}
+.btn-icon.red:hover{background:rgba(224,48,48,.1)}
+.btn-icon.gold{border-color:rgba(232,176,48,.35);color:var(--gold2)}
+.btn-icon.gold:hover{background:rgba(232,176,48,.1)}
+.btn-icon.blue{border-color:rgba(45,114,210,.35);color:var(--sky2)}
+.btn-icon.blue:hover{background:rgba(45,114,210,.1)}
+
+/* ── Pagination ──────────────────────────────────────────── */
+.pagination{display:flex;gap:6px;align-items:center;justify-content:flex-end;padding:14px 16px;border-top:1px solid var(--border)}
+.pg-btn{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:7px;padding:6px 12px;color:var(--text);cursor:pointer;font-family:var(--font);font-size:.8rem;transition:all .2s}
+.pg-btn:hover:not(:disabled){background:rgba(45,114,210,.15);border-color:var(--sky)}
+.pg-btn:disabled{opacity:.35;cursor:default}
+.pg-btn.active{background:var(--sky);border-color:var(--sky);color:#fff}
+.pg-info{color:var(--muted);font-size:.78rem;margin-right:auto}
+
+/* ── Modal ───────────────────────────────────────────────── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal{background:#0e1a30;border:1px solid var(--border);border-radius:16px;width:680px;max-width:100%;max-height:90vh;overflow-y:auto}
+.modal-head{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#0e1a30;z-index:2}
+.modal-title{font-family:var(--disp);font-size:1.2rem;color:var(--white);letter-spacing:.06em}
+.modal-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.3rem;line-height:1;padding:4px}
+.modal-close:hover{color:var(--white)}
+.modal-body{padding:22px 24px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.detail-item{display:flex;flex-direction:column;gap:3px}
+.detail-item.full{grid-column:1/-1}
+.di-label{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.di-value{font-size:.88rem;color:var(--white);font-weight:500}
+.detail-section{margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.detail-section-title{font-size:.72rem;font-weight:700;color:var(--gold2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
+.modal-actions{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;flex-wrap:wrap;background:#0b1525;border-radius:0 0 16px 16px}
+.btn-action{padding:9px 18px;border-radius:8px;border:none;cursor:pointer;font-family:var(--font);font-weight:700;font-size:.82rem;transition:opacity .2s}
+.btn-action:hover{opacity:.85}
+.btn-confirm{background:#16a34a;color:#fff}
+.btn-cancel-r{background:#dc2626;color:#fff}
+.btn-complete{background:var(--sky);color:#fff}
+.btn-delete{background:rgba(220,38,38,.15);color:#f87171;border:1px solid rgba(220,38,38,.3)}
+.btn-delete:hover{background:rgba(220,38,38,.28) !important}
+.admin-note{flex:1;min-width:180px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--white);font-family:var(--font);font-size:.82rem;outline:none}
+.admin-note:focus{border-color:var(--sky)}
+
+/* ── Toast ───────────────────────────────────────────────── */
+#toast{position:fixed;bottom:28px;right:28px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast-item{background:#1a2a44;border:1px solid var(--border);border-radius:10px;padding:12px 18px;font-size:.83rem;font-weight:600;min-width:220px;animation:slideIn .25s ease;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.toast-item.ok{border-color:rgba(52,211,153,.4);color:#34d399}
+.toast-item.err{border-color:rgba(224,48,48,.4);color:#f87171}
+@keyframes slideIn{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ── Empty state ─────────────────────────────────────────── */
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty svg{width:48px;height:48px;margin-bottom:16px;opacity:.3}
+.empty p{font-size:.9rem}
+
+/* ── Loading ─────────────────────────────────────────────── */
+.loading{text-align:center;padding:60px;color:var(--muted);font-size:.9rem}
+.spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--sky);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Section pages ───────────────────────────────────────── */
+.section{display:none}
+.section.active{display:block}
+
+/* ── Agent cards ─────────────────────────────────────────── */
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px}
+.agent-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.agent-card:hover{border-color:var(--sky);transform:translateY(-2px);box-shadow:0 8px 32px rgba(45,114,210,.15)}
+.agent-card.selected{border-color:var(--gold2);background:rgba(232,176,48,.04)}
+.agent-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--sky),var(--blue2))}
+.agent-card.selected::before{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.agent-name{font-family:var(--disp);font-size:1.15rem;color:var(--white);letter-spacing:.06em;margin-bottom:4px}
+.agent-ref{font-size:.68rem;color:var(--muted);font-family:monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
+.agent-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.ag-stat{background:rgba(255,255,255,.03);border-radius:8px;padding:10px 12px}
+.ag-stat-val{font-family:var(--disp);font-size:1.4rem;letter-spacing:.04em;line-height:1}
+.ag-stat-lbl{font-size:.65rem;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.06em}
+.ag-revenue{border-top:1px solid var(--border);padding-top:12px;display:flex;justify-content:space-between;align-items:baseline}
+.ag-rev-val{font-family:var(--disp);font-size:1.6rem;color:var(--gold2);letter-spacing:.04em}
+.ag-rev-lbl{font-size:.7rem;color:var(--muted)}
+.ag-pending-rev{font-size:.75rem;color:#fbbf24;margin-top:2px}
+.agent-bk-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.agent-bk-title{font-family:var(--disp);font-size:1.2rem;color:var(--white);letter-spacing:.06em}
+.agent-bk-back{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:7px 16px;color:var(--text);cursor:pointer;font-family:var(--font);font-size:.82rem;font-weight:600;transition:all .2s}
+.agent-bk-back:hover{background:rgba(45,114,210,.15)}
+.agent-summary-bar{display:flex;gap:16px;flex-wrap:wrap;background:rgba(232,176,48,.04);border:1px solid rgba(232,176,48,.2);border-radius:10px;padding:14px 18px;margin-bottom:18px}
+.asb-item{display:flex;flex-direction:column;gap:2px}
+.asb-val{font-family:var(--disp);font-size:1.3rem;color:var(--gold2);letter-spacing:.04em}
+.asb-lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+
+/* ── Amount colors ───────────────────────────────────────── */
+.amount-gold{color:var(--gold2);font-weight:700;font-family:monospace}
+
+/* ── Mobile hamburger button ─────────────────────────────── */
+.mob-topbar{display:none;position:fixed;top:0;left:0;right:0;height:52px;background:rgba(8,14,28,.97);border-bottom:1px solid var(--border);z-index:200;align-items:center;padding:0 16px;gap:12px}
+.mob-logo{font-family:var(--disp);font-size:1.2rem;color:var(--gold2);letter-spacing:.1em;flex:1}
+.mob-ham{background:none;border:none;color:var(--text);cursor:pointer;padding:6px;display:flex;flex-direction:column;gap:5px}
+.mob-ham span{display:block;width:22px;height:2px;background:currentColor;border-radius:2px;transition:all .25s}
+.mob-ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.mob-ham.open span:nth-child(2){opacity:0}
+.mob-ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:99;backdrop-filter:blur(2px)}
+.sidebar-overlay.open{display:block}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media(max-width:768px){
+  .mob-topbar{display:flex}
+  .sidebar{transform:translateX(-100%);transition:transform .28s ease;z-index:150}
+  .sidebar.mob-open{transform:translateX(0)}
+  .main{margin-left:0;padding:68px 14px 20px}
+  .page-header{flex-direction:column;align-items:flex-start;gap:10px;margin-bottom:16px}
+  .stats-grid{grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+  .stat-card{padding:14px 14px}
+  .stat-val{font-size:1.6rem}
+  .toolbar{flex-direction:column;align-items:stretch}
+  .tb-search{min-width:unset;width:100%}
+  .tb-filter{width:100%}
+  .toolbar .btn-icon{width:100%;justify-content:center}
+
+  /* Tables → card layout on mobile */
+  .table-wrap{overflow:hidden}
+  table{display:block}
+  thead{display:none}
+  tbody{display:block}
+  tbody tr{display:flex;flex-direction:column;gap:6px;padding:14px;border-bottom:1px solid rgba(45,114,210,.12);background:rgba(255,255,255,.02);margin-bottom:0}
+  tbody tr:hover{background:rgba(45,114,210,.06)}
+  td{display:flex;align-items:flex-start;padding:0;font-size:.82rem;border:none}
+  td::before{content:attr(data-label);font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;min-width:100px;flex-shrink:0;padding-top:1px}
+  td:empty{display:none}
+  .actions{flex-wrap:wrap;gap:6px;padding-top:4px}
+  .actions::before{content:'Actions';font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;min-width:100px;flex-shrink:0;padding-top:6px}
+
+  /* Modal full-screen on mobile */
+  .modal-bg{padding:0;align-items:flex-end}
+  .modal{width:100%;max-width:100%;max-height:92vh;border-radius:16px 16px 0 0}
+  .detail-grid{grid-template-columns:1fr}
+  .modal-actions{flex-direction:column}
+  .btn-action{width:100%;text-align:center}
+  .admin-note{min-width:unset;width:100%}
+
+  /* Toast bottom left on mobile */
+  #toast{bottom:16px;right:16px;left:16px}
+  .toast-item{min-width:unset;width:100%}
+
+  /* Pagination */
+  .pagination{flex-wrap:wrap;justify-content:center;gap:4px}
+  .pg-info{width:100%;text-align:center;margin-right:0;margin-bottom:4px}
+}
+
+@media(max-width:400px){
+  .stats-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE TOPBAR -->
+<div class="mob-topbar" id="mobTopbar">
+  <button class="mob-ham" id="mobHam" onclick="toggleSidebar()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="mob-logo">TRAVENCIA</div>
+</div>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">TRAVENCIA</div>
+    <div class="login-sub">Admin Dashboard — Staff Access Only</div>
+    <div class="lg">
+      <input type="email" id="lg_email" placeholder="Admin email" autocomplete="username"/>
+      <input type="password" id="lg_pass" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <div class="lg-err" id="lg_err"></div>
+      <button onclick="doLogin()">Sign In to Admin</button>
+    </div>
+  </div>
+</div>
+
+<!-- SHELL -->
+<div id="shell">
+  <aside class="sidebar">
+    <div class="sb-logo">TRAVENCIA<span>Admin Panel</span></div>
+    <nav>
+      <div class="nav-item active" data-page="dashboard" onclick="gotoPage('dashboard')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" data-page="reservations" onclick="gotoPage('reservations')">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Reservations
+        <span class="nav-badge" id="nb_pending" style="display:none">0</span>
+      </div>
+      <div class="nav-item" data-page="vehicles" onclick="gotoPage('vehicles')">
+        <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Vehicle Bookings
+        <span class="nav-badge" id="nb_veh" style="display:none">0</span>
+      </div>
+      <div class="nav-item" data-page="contacts" onclick="gotoPage('contacts')">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Contact Inquiries
+        <span class="nav-badge" id="nb_contact" style="display:none">0</span>
+      </div>
+      <div class="nav-item" data-page="users" onclick="gotoPage('users')">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Users
+      </div>
+      <div class="nav-item" data-page="agents" onclick="gotoPage('agents')">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+        Agent Stats
+      </div>
+    </nav>
+    <div class="sb-foot">
+      <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px" id="sb_user">—</div>
+      <button onclick="doLogout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div class="section active" id="page-dashboard">
+      <div class="page-header">
+        <div><div class="page-title">Dashboard</div><div class="page-sub">Live overview</div></div>
+        <button class="btn-icon blue" onclick="loadStats()"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>Refresh</button>
+      </div>
+      <div class="stats-grid" id="statsGrid"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+      <div style="margin-top:24px">
+        <div class="page-title" style="font-size:1.1rem;margin-bottom:14px;color:var(--text)">Recent Reservations</div>
+        <div id="recentTable"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+      </div>
+    </div>
+
+    <!-- RESERVATIONS -->
+    <div class="section" id="page-reservations">
+      <div class="page-header">
+        <div><div class="page-title">Reservations</div><div class="page-sub" id="res_count">—</div></div>
+      </div>
+      <div class="toolbar">
+        <input class="tb-search" id="res_search" placeholder="Search code, name, email…" oninput="debounceRes()"/>
+        <select class="tb-filter" id="res_status" onchange="loadReservations(1)">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="cancelled">Cancelled</option>
+          <option value="completed">Completed</option>
+        </select>
+        <button class="btn-icon blue" onclick="loadReservations(1)"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Search</button>
+      </div>
+      <div id="resTable"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+    </div>
+
+    <!-- VEHICLES -->
+    <div class="section" id="page-vehicles">
+      <div class="page-header">
+        <div><div class="page-title">Vehicle Bookings</div></div>
+      </div>
+      <div id="vehTable"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+    </div>
+
+    <!-- CONTACTS -->
+    <div class="section" id="page-contacts">
+      <div class="page-header">
+        <div><div class="page-title">Contact Inquiries</div></div>
+      </div>
+      <div id="contactTable"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+    </div>
+
+    <!-- USERS -->
+    <div class="section" id="page-users">
+      <div class="page-header">
+        <div><div class="page-title">Users</div></div>
+      </div>
+      <div id="usersTable"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+    </div>
+
+    <!-- AGENTS -->
+    <div class="section" id="page-agents">
+      <div class="page-header">
+        <div><div class="page-title">Agent <span style="color:var(--gold2)">Performance</span></div><div class="page-sub" id="agents_sub">Bookings & revenue per referral link</div></div>
+        <button class="btn-icon blue" onclick="loadAgents()"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>Refresh</button>
+      </div>
+      <!-- overview cards -->
+      <div id="agentCards"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+      <!-- per-agent bookings drill-down -->
+      <div id="agentDetail" style="display:none"></div>
+    </div>
+
+  </main>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-bg" id="detailModal" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalInner"></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ── Config ─────────────────────────────────────────────────
+const API = window.location.origin;
+let TOKEN = localStorage.getItem('tv_admin_token') || '';
+let _resPage = 1, _resDebounce = null;
+
+// ── Boot ───────────────────────────────────────────────────
+if (TOKEN) tryAutoLogin();
+function tryAutoLogin() {
+  fetch(API + '/api/auth/me', { headers: { Authorization: 'Bearer ' + TOKEN } })
+    .then(r => r.json()).then(j => {
+      if (j.success && j.data.role === 'admin') showShell(j.data);
+      else { TOKEN = ''; localStorage.removeItem('tv_admin_token'); }
+    }).catch(() => {});
+}
+
+async function doLogin() {
+  const email = document.getElementById('lg_email').value.trim();
+  const pass  = document.getElementById('lg_pass').value;
+  const err   = document.getElementById('lg_err');
+  err.textContent = '';
+  if (!email || !pass) { err.textContent = 'Email and password required.'; return; }
+  try {
+    const r = await fetch(API + '/api/auth/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password: pass })
+    });
+    const j = await r.json();
+    if (!j.success) { err.textContent = j.error || 'Login failed.'; return; }
+    if (j.data.role !== 'admin') { err.textContent = 'This account does not have admin access.'; return; }
+    TOKEN = j.data.token;
+    localStorage.setItem('tv_admin_token', TOKEN);
+    showShell(j.data);
+  } catch(e) { err.textContent = 'Connection error. Is the server running?'; }
+}
+
+function showShell(user) {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('shell').style.display = 'block';
+  document.getElementById('sb_user').textContent = user.first_name + ' — Admin';
+  if (window.innerWidth <= 768) document.getElementById('mobTopbar').style.display = 'flex';
+  loadStats();
+}
+
+function doLogout() {
+  TOKEN = ''; localStorage.removeItem('tv_admin_token');
+  document.getElementById('shell').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mobTopbar').style.display = 'none';
+  closeSidebar();
+}
+
+// ── Navigation ─────────────────────────────────────────────
+function gotoPage(p) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  document.querySelector(`[data-page="${p}"]`).classList.add('active');
+  if (p === 'dashboard')    loadStats();
+  if (p === 'reservations') loadReservations(1);
+  if (p === 'vehicles')     loadVehicles();
+  if (p === 'contacts')     loadContacts();
+  if (p === 'users')        loadUsers();
+  if (p === 'agents')       loadAgents();
+}
+
+// ── API helper ─────────────────────────────────────────────
+async function api(path, opts = {}) {
+  const r = await fetch(API + path, {
+    ...opts,
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + TOKEN, ...(opts.headers || {}) }
+  });
+  const j = await r.json();
+  if (!j.success) throw new Error(j.error || 'Request failed');
+  return j;
+}
+
+// ── Toast ──────────────────────────────────────────────────
+function toast(msg, type = 'ok') {
+  const el = document.createElement('div');
+  el.className = 'toast-item ' + type;
+  el.textContent = msg;
+  document.getElementById('toast').appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+// ── Helpers ────────────────────────────────────────────────
+function fmt(n) { return Number(n || 0).toLocaleString(); }
+function fmtDate(d) { if (!d) return '—'; return new Date(d).toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }); }
+function fmtDT(d) { if (!d) return '—'; return new Date(d).toLocaleString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }); }
+function badge(s) { return `<span class="badge badge-${s||'pending'}">${s||'pending'}</span>`; }
+function confirmDialog(msg) { return window.confirm(msg); }
+
+// ── STATS / DASHBOARD ──────────────────────────────────────
+async function loadStats() {
+  try {
+    const j = await api('/api/admin/stats');
+    const d = j.data;
+    // Update nav badges
+    const nbP = document.getElementById('nb_pending');
+    if (d.pending > 0) { nbP.textContent = d.pending; nbP.style.display = ''; }
+    else nbP.style.display = 'none';
+    const nbC = document.getElementById('nb_contact');
+    if (d.new_contacts > 0) { nbC.textContent = d.new_contacts; nbC.style.display = ''; }
+    else nbC.style.display = 'none';
+    const nbV = document.getElementById('nb_veh');
+    if (d.pending_vehicles > 0) { nbV.textContent = d.pending_vehicles; nbV.style.display = ''; }
+    else nbV.style.display = 'none';
+
+    document.getElementById('statsGrid').innerHTML = `
+      <div class="stat-card gold"><div class="stat-val">$${fmt(d.confirmed_revenue)}</div><div class="stat-lbl">Confirmed Revenue</div></div>
+      <div class="stat-card blue"><div class="stat-val">${d.total_reservations}</div><div class="stat-lbl">Total Reservations</div></div>
+      <div class="stat-card warn"><div class="stat-val">${d.pending}</div><div class="stat-lbl">Pending</div></div>
+      <div class="stat-card green"><div class="stat-val">${d.confirmed}</div><div class="stat-lbl">Confirmed</div></div>
+      <div class="stat-card red"><div class="stat-val">${d.cancelled}</div><div class="stat-lbl">Cancelled</div></div>
+      <div class="stat-card blue"><div class="stat-val">${d.new_contacts}</div><div class="stat-lbl">New Messages</div></div>
+    `;
+    // Load recent reservations
+    const jr = await api('/api/admin/reservations?limit=10&page=1');
+    document.getElementById('recentTable').innerHTML = buildResTable(jr.data, false);
+  } catch(e) {
+    document.getElementById('statsGrid').innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`;
+  }
+}
+
+// ── RESERVATIONS ───────────────────────────────────────────
+function debounceRes() {
+  clearTimeout(_resDebounce);
+  _resDebounce = setTimeout(() => loadReservations(1), 400);
+}
+
+async function loadReservations(page = 1) {
+  _resPage = page;
+  const search = document.getElementById('res_search')?.value || '';
+  const status = document.getElementById('res_status')?.value || '';
+  const url = `/api/admin/reservations?page=${page}&limit=25&search=${encodeURIComponent(search)}&status=${status}`;
+  document.getElementById('resTable').innerHTML = '<div class="loading"><div class="spinner"></div>Loading…</div>';
+  try {
+    const j = await api(url);
+    document.getElementById('res_count').textContent = `${j.total} reservation${j.total !== 1 ? 's' : ''}`;
+    document.getElementById('resTable').innerHTML = buildResTable(j.data, true) + buildPagination(j.page, j.pages, 'loadReservations');
+  } catch(e) {
+    document.getElementById('resTable').innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`;
+  }
+}
+
+function buildResTable(rows, showActions) {
+  if (!rows.length) return `<div class="table-wrap"><div class="empty"><svg viewBox="0 0 24 24" stroke="currentColor" fill="none" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg><p>No reservations found</p></div></div>`;
+  return `<div class="table-wrap"><table>
+    <thead><tr>
+      <th>Code</th><th>Guest</th><th>Destination</th><th>Dates</th>
+      <th>Pax</th><th>Total</th><th>Payment</th><th>Ref</th><th>Status</th><th>Created</th>
+      ${showActions ? '<th>Actions</th>' : ''}
+    </tr></thead>
+    <tbody>
+    ${rows.map(r => `<tr>
+      <td data-label="Code"><div class="td-code">${r.reservation_code}</div></td>
+      <td data-label="Guest"><div class="td-name">${r.first_name} ${r.last_name}</div><div class="td-muted">${r.email}</div></td>
+      <td data-label="Destination">${r.dest_name}</td>
+      <td data-label="Dates"><div class="td-muted">${fmtDate(r.departure_date)} → ${fmtDate(r.return_date)}</div></td>
+      <td data-label="Pax">${(r.num_adults||1) + (r.num_children||0)}</td>
+      <td data-label="Total"><span class="amount-gold">$${fmt(r.total_amount)}</span></td>
+      <td data-label="Payment"><div class="td-muted">${r.payment_method||'—'}</div></td>
+      <td data-label="Ref">${r.ref ? `<span style="font-family:monospace;font-size:.72rem;color:var(--sky2);background:rgba(45,114,210,.12);padding:2px 7px;border-radius:4px">${r.ref}</span><div class="td-muted" style="font-size:.7rem;margin-top:2px">${AGENT_LABELS[r.ref]||''}</div>` : '<span class="td-muted">—</span>'}</td>
+      <td data-label="Status">${badge(r.status)}</td>
+      <td data-label="Created"><div class="td-muted">${fmtDT(r.created_at)}</div></td>
+      ${showActions ? `<td><div class="actions">
+        <button class="btn-icon blue" onclick="viewRes(${r.id})"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button>
+        <button class="btn-icon red" onclick="deleteRes(${r.id},'${r.reservation_code}')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Del</button>
+      </div></td>` : ''}
+    </tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+async function viewRes(id) {
+  try {
+    const j = await api('/api/admin/reservations/' + id);
+    const r = j.data;
+    const acts = (() => { try { return JSON.parse(r.selected_activities || '[]'); } catch { return []; } })();
+    document.getElementById('modalInner').innerHTML = `
+      <div class="modal-head">
+        <div class="modal-title">Reservation — <span style="color:var(--gold2)">${r.reservation_code}</span></div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom:12px">${badge(r.status)}</div>
+        <div class="detail-section"><div class="detail-section-title">Guest Information</div>
+          <div class="detail-grid">
+            <div class="detail-item"><div class="di-label">Full Name</div><div class="di-value">${r.first_name} ${r.last_name}</div></div>
+            <div class="detail-item"><div class="di-label">Email</div><div class="di-value">${r.email}</div></div>
+            <div class="detail-item"><div class="di-label">Phone / WhatsApp</div><div class="di-value">${r.phone||'—'}</div></div>
+            <div class="detail-item"><div class="di-label">Country of Origin</div><div class="di-value">${r.country_of_origin||'—'}</div></div>
+            <div class="detail-item"><div class="di-label">Adults</div><div class="di-value">${r.num_adults||1}</div></div>
+            <div class="detail-item"><div class="di-label">Children</div><div class="di-value">${r.num_children||0}</div></div>
+          </div>
+        </div>
+        <div class="detail-section"><div class="detail-section-title">Trip Details</div>
+          <div class="detail-grid">
+            <div class="detail-item"><div class="di-label">Destination</div><div class="di-value">${r.dest_name}, ${r.dest_country}</div></div>
+            <div class="detail-item"><div class="di-label">Accommodation</div><div class="di-value">${r.accommodation_name||'Standard'}</div></div>
+            <div class="detail-item"><div class="di-label">Departure</div><div class="di-value">${fmtDate(r.departure_date)}</div></div>
+            <div class="detail-item"><div class="di-label">Return</div><div class="di-value">${fmtDate(r.return_date)}</div></div>
+            <div class="detail-item"><div class="di-label">Nights</div><div class="di-value">${r.num_nights||'—'}</div></div>
+            <div class="detail-item"><div class="di-label">Peak Season</div><div class="di-value">${r.is_peak_season ? '🔥 Yes' : 'No'}</div></div>
+          </div>
+        </div>
+        <div class="detail-section"><div class="detail-section-title">Financial Breakdown</div>
+          <div class="detail-grid">
+            <div class="detail-item"><div class="di-label">Flights</div><div class="di-value amount-gold">$${fmt(r.flight_cost)}</div></div>
+            <div class="detail-item"><div class="di-label">Accommodation</div><div class="di-value amount-gold">$${fmt(r.accommodation_cost)}</div></div>
+            <div class="detail-item"><div class="di-label">Activities</div><div class="di-value amount-gold">$${fmt(r.activities_cost)}</div></div>
+            <div class="detail-item"><div class="di-label">Vehicles</div><div class="di-value amount-gold">$${fmt(r.vehicles_cost||0)}</div></div>
+            <div class="detail-item"><div class="di-label">Subtotal</div><div class="di-value">$${fmt(r.subtotal)}</div></div>
+            <div class="detail-item"><div class="di-label">Taxes (12%)</div><div class="di-value">$${fmt(r.taxes)}</div></div>
+            <div class="detail-item full"><div class="di-label">Total Amount</div><div class="di-value" style="font-size:1.2rem;color:var(--gold2);font-weight:800">$${fmt(r.total_amount)} USD</div></div>
+          </div>
+        </div>
+        <div class="detail-section"><div class="detail-section-title">Payment</div>
+          <div class="detail-grid">
+            <div class="detail-item"><div class="di-label">Method</div><div class="di-value">${r.payment_method||'—'}</div></div>
+            <div class="detail-item"><div class="di-label">Payment Status</div><div class="di-value">${badge(r.payment_status)}</div></div>
+            <div class="detail-item"><div class="di-label">Transaction ID</div><div class="di-value">${r.transaction_id||'—'}</div></div>
+          </div>
+        </div>
+        ${r.notes ? `<div class="detail-section"><div class="detail-section-title">Client Notes</div><div style="font-size:.85rem;color:var(--text);line-height:1.6">${r.notes}</div></div>` : ''}
+        ${r.admin_notes ? `<div class="detail-section"><div class="detail-section-title">Admin Notes</div><div style="font-size:.85rem;color:var(--gold3);line-height:1.6">${r.admin_notes}</div></div>` : ''}
+        <div class="detail-section"><div class="detail-section-title">Meta</div>
+          <div class="detail-grid">
+            <div class="detail-item"><div class="di-label">Booked At</div><div class="di-value">${fmtDT(r.created_at)}</div></div>
+            <div class="detail-item"><div class="di-label">Last Updated</div><div class="di-value">${fmtDT(r.updated_at)}</div></div>
+            <div class="detail-item"><div class="di-label">Agent Ref</div><div class="di-value" style="color:var(--sky2);font-family:monospace">${r.ref ? r.ref + '<span style="font-family:var(--font);color:var(--gold2);font-size:.8rem;margin-left:8px;font-weight:700">' + (AGENT_LABELS[r.ref]||'') + '</span>' : '— direct'}</div></div>
+            <div class="detail-item"><div class="di-label">IP Address</div><div class="di-value">${r.ip_address||'—'}</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <input class="admin-note" id="modal_note" placeholder="Add admin note (optional)…" value="${r.admin_notes||''}"/>
+        ${r.status==='pending'?`<button class="btn-action btn-confirm" onclick="updateResStatus(${r.id},'confirmed')">✓ Confirm</button>`:''}
+        ${r.status==='confirmed'?`<button class="btn-action btn-complete" onclick="updateResStatus(${r.id},'completed')">✓ Mark Completed</button>`:''}
+        ${['pending','confirmed'].includes(r.status)?`<button class="btn-action btn-cancel-r" onclick="updateResStatus(${r.id},'cancelled')">✗ Cancel</button>`:''}
+        <button class="btn-action btn-delete" onclick="deleteRes(${r.id},'${r.reservation_code}')">🗑 Delete</button>
+      </div>
+    `;
+    document.getElementById('detailModal').style.display = 'flex';
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+async function updateResStatus(id, status) {
+  const note = document.getElementById('modal_note')?.value || '';
+  try {
+    await api(`/api/admin/reservations/${id}/status`, {
+      method: 'PATCH', body: JSON.stringify({ status, admin_notes: note || undefined })
+    });
+    toast(`Reservation ${status}!`, 'ok');
+    closeModal();
+    if (document.getElementById('page-reservations').classList.contains('active')) loadReservations(_resPage);
+    loadStats();
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+async function deleteRes(id, code) {
+  if (!confirmDialog(`Delete reservation ${code}? This cannot be undone.`)) return;
+  try {
+    await api(`/api/admin/reservations/${id}`, { method: 'DELETE' });
+    toast('Reservation deleted.', 'ok');
+    closeModal();
+    loadReservations(_resPage);
+    loadStats();
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+// ── VEHICLES ───────────────────────────────────────────────
+async function loadVehicles() {
+  document.getElementById('vehTable').innerHTML = '<div class="loading"><div class="spinner"></div>Loading…</div>';
+  try {
+    const j = await api('/api/admin/vehicles');
+    const rows = j.data;
+    if (!rows.length) { document.getElementById('vehTable').innerHTML = '<div class="table-wrap"><div class="empty"><p>No vehicle bookings yet</p></div></div>'; return; }
+    document.getElementById('vehTable').innerHTML = `<div class="table-wrap"><table>
+      <thead><tr><th>Code</th><th>Guest</th><th>Vehicle</th><th>Pickup</th><th>Destination</th><th>Pax</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>${rows.map(r => `<tr>
+        <td data-label="Code"><div class="td-code">${r.booking_code}</div></td>
+        <td data-label="Guest"><div class="td-name">${r.first_name} ${r.last_name}</div><div class="td-muted">${r.phone}</div></td>
+        <td data-label="Vehicle">${r.vehicle_name||'—'}</td>
+        <td data-label="Pickup"><div class="td-muted">${fmtDate(r.pickup_date)} ${r.pickup_time||''}</div></td>
+        <td data-label="Destination">${r.destination||'—'}</td>
+        <td data-label="Pax">${r.num_passengers||1}</td>
+        <td data-label="Price"><span class="amount-gold">$${fmt(r.price_usd)}</span></td>
+        <td data-label="Status">${badge(r.status)}</td>
+        <td><div class="actions">
+          ${r.status==='pending'?`<button class="btn-icon green" onclick="updateVehStatus(${r.id},'confirmed')">Confirm</button>`:''}
+          <button class="btn-icon red" onclick="deleteVeh(${r.id},\'${r.booking_code}\')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Del</button>
+        </div></td>
+      </tr>`).join('')}</tbody></table></div>`;
+  } catch(e) { document.getElementById('vehTable').innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`; }
+}
+
+async function updateVehStatus(id, status) {
+  try {
+    await api(`/api/admin/vehicles/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
+    toast('Vehicle booking updated.', 'ok'); loadVehicles(); loadStats();
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+async function deleteVeh(id, code) {
+  if (!confirmDialog(`Delete vehicle booking ${code}?`)) return;
+  try {
+    await api(`/api/admin/vehicles/${id}`, { method: 'DELETE' });
+    toast('Deleted.', 'ok'); loadVehicles();
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+// ── AGENTS ─────────────────────────────────────────────────
+const AGENT_LABELS = {
+  agent1: 'Famous',
+  agent2: 'Casteletto',
+  agent3: 'JD saint',
+  agent4: 'choco',
+  agent5: 'Mr parfait',
+  agent6: 'SMIG',
+  agent7: 'Jason',
+  agent8: 'Agent 8',
+  __direct__: 'Direct (no ref)'
+};
+let _agentData = [];
+
+async function loadAgents() {
+  document.getElementById('agentCards').innerHTML = '<div class="loading"><div class="spinner"></div>Loading…</div>';
+  document.getElementById('agentDetail').style.display = 'none';
+  try {
+    const j = await api('/api/admin/agents');
+    _agentData = j.data;
+    renderAgentCards();
+  } catch(e) {
+    document.getElementById('agentCards').innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`;
+  }
+}
+
+function renderAgentCards() {
+  const wrap = document.getElementById('agentCards');
+  if (!_agentData.length) {
+    wrap.innerHTML = '<div class="table-wrap"><div class="empty"><p>No bookings with ref links yet</p></div></div>';
+    return;
+  }
+  const totalRev = _agentData.reduce((s,a) => s + Number(a.confirmed_revenue||0), 0);
+  document.getElementById('agents_sub').textContent =
+    _agentData.length + ' source(s) · $' + fmt(totalRev) + ' confirmed revenue total';
+
+  wrap.innerHTML = '<div class="agent-grid">' + _agentData.map(a => {
+    const name   = AGENT_LABELS[a.ref] || a.ref;
+    const isDirect = a.ref === '__direct__';
+    const shareP = totalRev > 0 ? Math.round(Number(a.confirmed_revenue) / totalRev * 100) : 0;
+    return `<div class="agent-card${isDirect?' direct':''}" onclick="drillAgent('${a.ref}','${name}',this)" id="agc_${a.ref}">
+      <div class="agent-name">${name}</div>
+      <div class="agent-ref">${isDirect ? 'no ?ref= param' : '?ref=' + a.ref}</div>
+      <div class="agent-stats">
+        <div class="ag-stat"><div class="ag-stat-val" style="color:#fbbf24">${a.pending||0}</div><div class="ag-stat-lbl">Pending</div></div>
+        <div class="ag-stat"><div class="ag-stat-val" style="color:#34d399">${a.confirmed||0}</div><div class="ag-stat-lbl">Confirmed</div></div>
+        <div class="ag-stat"><div class="ag-stat-val" style="color:var(--sky2)">${a.completed||0}</div><div class="ag-stat-lbl">Completed</div></div>
+        <div class="ag-stat"><div class="ag-stat-val" style="color:var(--danger)">${a.cancelled||0}</div><div class="ag-stat-lbl">Cancelled</div></div>
+      </div>
+      <div class="ag-revenue">
+        <div>
+          <div class="ag-rev-val">$${fmt(a.confirmed_revenue||0)}</div>
+          <div class="ag-rev-lbl">Confirmed revenue (${shareP}% of total)</div>
+          ${Number(a.pending_revenue) > 0 ? `<div class="ag-pending-rev">+ $${fmt(a.pending_revenue)} pending</div>` : ''}
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:var(--disp);font-size:1.1rem;color:var(--text)">${a.total_bookings}</div>
+          <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">bookings</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('') + '</div>';
+}
+
+async function drillAgent(ref, name, cardEl) {
+  // Toggle: clicking same card again collapses
+  document.querySelectorAll('.agent-card').forEach(c => c.classList.remove('selected'));
+  const detail = document.getElementById('agentDetail');
+  if (detail.dataset.ref === ref && detail.style.display !== 'none') {
+    detail.style.display = 'none';
+    detail.dataset.ref = '';
+    return;
+  }
+  cardEl.classList.add('selected');
+  detail.style.display = 'block';
+  detail.dataset.ref = ref;
+  detail.innerHTML = '<div class="loading"><div class="spinner"></div>Loading bookings…</div>';
+  detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  try {
+    const j = await api('/api/admin/agents?ref=' + encodeURIComponent(ref));
+    const agent = _agentData.find(a => a.ref === ref) || {};
+    const rows  = j.bookings || [];
+    detail.innerHTML = `
+      <div class="agent-bk-header">
+        <div class="agent-bk-title">${name} — All Bookings</div>
+        <button class="agent-bk-back" onclick="document.getElementById('agentDetail').style.display='none';document.querySelectorAll('.agent-card').forEach(c=>c.classList.remove('selected'))">✕ Close</button>
+      </div>
+      <div class="agent-summary-bar">
+        <div class="asb-item"><div class="asb-val">$${fmt(agent.confirmed_revenue||0)}</div><div class="asb-lbl">Confirmed Revenue</div></div>
+        <div class="asb-item"><div class="asb-val" style="color:#fbbf24">$${fmt(agent.pending_revenue||0)}</div><div class="asb-lbl">Pending Revenue</div></div>
+        <div class="asb-item"><div class="asb-val">${agent.total_bookings||0}</div><div class="asb-lbl">Total Bookings</div></div>
+        <div class="asb-item"><div class="asb-val" style="color:#34d399">${agent.confirmed||0}</div><div class="asb-lbl">Confirmed</div></div>
+        <div class="asb-item"><div class="asb-val" style="color:#fbbf24">${agent.pending||0}</div><div class="asb-lbl">Pending</div></div>
+        <div class="asb-item"><div class="asb-val" style="color:var(--danger)">${agent.cancelled||0}</div><div class="asb-lbl">Cancelled</div></div>
+      </div>
+      ${rows.length === 0
+        ? '<div class="table-wrap"><div class="empty"><p>No bookings for this agent yet</p></div></div>'
+        : `<div class="table-wrap"><table>
+            <thead><tr><th>Code</th><th>Guest</th><th>Destination</th><th>Dates</th><th>Pax</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+            <tbody>${rows.map(r => `<tr>
+              <td data-label="Code"><div class="td-code">${r.reservation_code}</div></td>
+              <td data-label="Guest"><div class="td-name">${r.first_name} ${r.last_name}</div><div class="td-muted">${r.email}</div></td>
+              <td data-label="Destination">${r.dest_name||'—'}</td>
+              <td data-label="Dates"><div class="td-muted">${fmtDate(r.departure_date)} → ${fmtDate(r.return_date)}</div></td>
+              <td data-label="Pax">${(r.num_adults||1)+(r.num_children||0)}</td>
+              <td data-label="Total"><span class="amount-gold">$${fmt(r.total_amount)}</span></td>
+              <td data-label="Payment"><div class="td-muted">${r.payment_method||'—'}</div></td>
+              <td data-label="Status">${badge(r.status)}</td>
+              <td data-label="Date"><div class="td-muted">${fmtDT(r.created_at)}</div></td>
+              <td><div class="actions">
+                <button class="btn-icon blue" onclick="viewRes(${r.id})"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button>
+              </div></td>
+            </tr>`).join('')}</tbody>
+           </table></div>`
+      }`;
+  } catch(e) {
+    detail.innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`;
+  }
+}
+
+// ── CONTACTS ───────────────────────────────────────────────
+async function loadContacts() {
+  document.getElementById('contactTable').innerHTML = '<div class="loading"><div class="spinner"></div>Loading…</div>';
+  try {
+    const j = await api('/api/admin/contacts');
+    const rows = j.data;
+    if (!rows.length) { document.getElementById('contactTable').innerHTML = '<div class="table-wrap"><div class="empty"><p>No inquiries yet</p></div></div>'; return; }
+    document.getElementById('contactTable').innerHTML = `<div class="table-wrap"><table>
+      <thead><tr><th>From</th><th>Subject</th><th>Destination</th><th>Message</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody>${rows.map(r => `<tr>
+        <td data-label="From"><div class="td-name">${r.first_name} ${r.last_name||''}</div><div class="td-muted">${r.email}</div><div class="td-muted">${r.phone||''}</div></td>
+        <td data-label="Subject">${r.subject||'—'}</td>
+        <td data-label="Destination">${r.destination||'—'}</td>
+        <td data-label="Message" style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${(r.message||'').replace(/"/g,'&quot;')}">${r.message||''}</td>
+        <td data-label="Status">${badge(r.status)}</td>
+        <td data-label="Date"><div class="td-muted">${fmtDT(r.created_at)}</div></td>
+        <td><div class="actions">
+          ${r.status==='new'?`<button class="btn-icon gold" onclick="updateContactStatus(${r.id},'replied')">Mark Replied</button>`:''}
+          <button class="btn-icon red" onclick="deleteContact(${r.id})"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Del</button>
+        </div></td>
+      </tr>`).join('')}</tbody></table></div>`;
+  } catch(e) { document.getElementById('contactTable').innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`; }
+}
+
+async function updateContactStatus(id, status) {
+  try {
+    await api(`/api/admin/contacts/${id}/status`, { method: 'PATCH', body: JSON.stringify({ status }) });
+    toast('Updated.', 'ok'); loadContacts(); loadStats();
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+async function deleteContact(id) {
+  if (!confirmDialog('Delete this inquiry?')) return;
+  try {
+    await api(`/api/admin/contacts/${id}`, { method: 'DELETE' });
+    toast('Deleted.', 'ok'); loadContacts();
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+// ── USERS ──────────────────────────────────────────────────
+async function loadUsers() {
+  document.getElementById('usersTable').innerHTML = '<div class="loading"><div class="spinner"></div>Loading…</div>';
+  try {
+    const j = await api('/api/admin/users');
+    const rows = j.data;
+    document.getElementById('usersTable').innerHTML = `<div class="table-wrap"><table>
+      <thead><tr><th>Name</th><th>Email</th><th>WhatsApp</th><th>Country</th><th>Role</th><th>Verified</th><th>Joined</th><th>Last Login</th><th>Actions</th></tr></thead>
+      <tbody>${rows.map(r => `<tr>
+        <td data-label="Name"><div class="td-name">${r.first_name} ${r.last_name}</div></td>
+        <td data-label="Email"><div class="td-muted">${r.email}</div></td>
+        <td data-label="WhatsApp"><div class="td-muted">${r.whatsapp||'—'}</div></td>
+        <td data-label="Country">${r.country||'—'}</td>
+        <td data-label="Role"><span class="badge badge-${r.role==='admin'?'confirmed':'pending'}">${r.role}</span></td>
+        <td data-label="Verified">${r.is_verified ? '✓' : '—'}</td>
+        <td data-label="Joined"><div class="td-muted">${fmtDate(r.created_at)}</div></td>
+        <td data-label="Last Login"><div class="td-muted">${r.last_login ? fmtDT(r.last_login) : '—'}</div></td>
+        <td><div class="actions">
+          ${r.role!=='admin'?`<button class="btn-icon gold" onclick="promoteUser(${r.id})">Make Admin</button>`:''}
+          ${r.role==='admin'?`<button class="btn-icon blue" onclick="demoteUser(${r.id})">Revoke Admin</button>`:''}
+        </div></td>
+      </tr>`).join('')}</tbody></table></div>`;
+  } catch(e) { document.getElementById('usersTable').innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`; }
+}
+
+async function promoteUser(id) {
+  if (!confirmDialog('Grant admin access to this user?')) return;
+  try { await api(`/api/admin/users/${id}/role`, { method: 'PATCH', body: JSON.stringify({ role: 'admin' }) }); toast('User promoted to admin.', 'ok'); loadUsers(); } catch(e) { toast(e.message, 'err'); }
+}
+async function demoteUser(id) {
+  if (!confirmDialog('Revoke admin access?')) return;
+  try { await api(`/api/admin/users/${id}/role`, { method: 'PATCH', body: JSON.stringify({ role: 'client' }) }); toast('Admin access revoked.', 'ok'); loadUsers(); } catch(e) { toast(e.message, 'err'); }
+}
+
+// ── Pagination ─────────────────────────────────────────────
+function buildPagination(page, pages, fn) {
+  if (pages <= 1) return '';
+  let btns = `<div class="pagination"><span class="pg-info">Page ${page} of ${pages}</span>`;
+  btns += `<button class="pg-btn" onclick="${fn}(${page-1})" ${page<=1?'disabled':''}>‹ Prev</button>`;
+  for (let i = Math.max(1,page-2); i <= Math.min(pages,page+2); i++) {
+    btns += `<button class="pg-btn ${i===page?'active':''}" onclick="${fn}(${i})">${i}</button>`;
+  }
+  btns += `<button class="pg-btn" onclick="${fn}(${page+1})" ${page>=pages?'disabled':''}>Next ›</button></div>`;
+  return btns;
+}
+
+// ── Modal ──────────────────────────────────────────────────
+function closeModal() { document.getElementById('detailModal').style.display = 'none'; }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── Mobile sidebar ─────────────────────────────────────────
+function toggleSidebar() {
+  const sb = document.querySelector('.sidebar');
+  const ov = document.getElementById('sidebarOverlay');
+  const ham = document.getElementById('mobHam');
+  const open = sb.classList.toggle('mob-open');
+  ov.classList.toggle('open', open);
+  ham.classList.toggle('open', open);
+}
+function closeSidebar() {
+  document.querySelector('.sidebar').classList.remove('mob-open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+  document.getElementById('mobHam').classList.remove('open');
+}
+// Close sidebar when a nav item is clicked on mobile
+document.querySelectorAll('.nav-item').forEach(n => n.addEventListener('click', () => {
+  if (window.innerWidth <= 768) closeSidebar();
+}));
+// On load, show topbar if already logged in on mobile
+if (TOKEN && window.innerWidth <= 768) {
+  document.getElementById('mobTopbar').style.display = 'flex';
+}
+
+// ── Auto-refresh stats every 60s ───────────────────────────
+setInterval(() => {
+  if (document.getElementById('page-dashboard').classList.contains('active')) loadStats();
+}, 60000);
+</script>
+</body>
+</html>

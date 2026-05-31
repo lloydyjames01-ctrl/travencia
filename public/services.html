@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+  <meta name="tv-wa" content="REPLACE_WITH_WHATSAPP_NUMBER"/>
+  <meta name="tv-email" content="travenciaagency@gmail.com"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Services — Travencia</title>
+<link rel="stylesheet" href="css/main.css"/>
+<style>
+.page-hero{position:relative;height:360px;overflow:hidden;display:flex;align-items:flex-end;padding:0 56px 48px;margin-top:74px}
+.ph-bg{position:absolute;inset:0;background:linear-gradient(135deg,var(--navy3),var(--blue));background-image:url('images/DUBAI.jpeg');background-size:cover;background-position:center}
+.ph-grad{position:absolute;inset:0;background:linear-gradient(160deg,rgba(4,8,15,.75),rgba(4,8,15,.9))}
+.ph-content{position:relative;z-index:2}
+.ph-eyebrow{font-size:.67rem;letter-spacing:.34em;text-transform:uppercase;color:var(--sky2);background:rgba(45,114,210,.08);border:1px solid rgba(45,114,210,.22);padding:4px 13px;border-radius:20px;display:inline-block;margin-bottom:14px}
+.ph-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.4rem,5vw,4rem);letter-spacing:.04em;color:var(--white);line-height:1;margin-bottom:8px}
+.ph-title .g{color:var(--gold2)}
+.ph-sub{font-size:.88rem;color:var(--muted);max-width:520px}
+
+/* Vehicle cards */
+.vehicle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
+.v-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rLg);overflow:hidden;transition:all .4s}
+.v-card:hover{transform:translateY(-6px);border-color:rgba(45,114,210,.38);box-shadow:0 22px 50px rgba(0,0,0,.42)}
+.v-top{height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.v-top.sedan{background:linear-gradient(135deg,#0A1628,#1A3060)}
+.v-top.suv{background:linear-gradient(135deg,#0A1E28,#1A4060)}
+.v-top.van{background:linear-gradient(135deg,#1A0A28,#3A1A60)}
+.v-top.luxury{background:linear-gradient(135deg,#1E1A08,#5A4A10)}
+.v-top.driver{background:linear-gradient(135deg,#081A10,#1A5030)}
+.v-top.bus{background:linear-gradient(135deg,#1A0808,#5A1A1A)}
+.v-vehicle-label{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:.1em;color:rgba(255,255,255,.22);text-align:center}
+.v-badge{position:absolute;top:14px;right:14px;padding:4px 12px;border-radius:14px;font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+.v-badge.popular{background:rgba(200,149,32,.2);color:var(--gold2);border:1px solid rgba(200,149,32,.3)}
+.v-badge.premium{background:rgba(45,114,210,.2);color:var(--sky2);border:1px solid rgba(45,114,210,.3)}
+.v-badge.new{background:rgba(40,180,90,.2);color:#60D890;border:1px solid rgba(40,180,90,.3)}
+.v-body{padding:22px}
+.v-name{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--white);letter-spacing:.06em;margin-bottom:6px}
+.v-desc{font-size:.82rem;color:var(--muted);line-height:1.65;margin-bottom:16px}
+.v-features{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.v-feature{padding:3px 10px;background:rgba(45,114,210,.08);border:1px solid rgba(45,114,210,.16);color:var(--sky2);font-size:.67rem;border-radius:10px}
+.v-foot{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid rgba(45,114,210,.1)}
+.v-price-lbl{font-size:.66rem;color:var(--faint);text-transform:uppercase;letter-spacing:.07em}
+.v-price{font-family:'Bebas Neue',sans-serif;font-size:1.55rem;color:var(--gold2);letter-spacing:.04em;line-height:1}
+.v-price small{font-size:.62rem;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif;font-weight:400}
+.btn-book-v{padding:10px 22px;background:linear-gradient(130deg,var(--gold),var(--gold2));color:var(--navy);font-weight:700;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;border-radius:6px;transition:all .3s;border:none;cursor:pointer}
+.btn-book-v:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(200,149,32,.35)}
+
+/* Driver form modal */
+.driver-form{padding:32px}
+.driver-form-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--white);letter-spacing:.06em;margin-bottom:20px}
+.driver-form-title span{color:var(--gold2)}
+.driver-summary{background:rgba(200,149,32,.08);border:1px solid rgba(200,149,32,.2);border-radius:10px;padding:16px 20px;margin-bottom:22px;display:flex;justify-content:space-between;align-items:center}
+.ds-name{font-weight:700;color:var(--white);font-size:.92rem}
+.ds-price{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold2);letter-spacing:.05em}
+
+/* Packages section */
+.pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pkg-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rLg);padding:28px;position:relative;transition:all .4s}
+.pkg-card:hover{border-color:rgba(45,114,210,.38);transform:translateY(-4px);box-shadow:0 18px 44px rgba(0,0,0,.38)}
+.pkg-card.featured{border-color:rgba(200,149,32,.3);background:rgba(200,149,32,.04)}
+.pkg-badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);padding:4px 18px;background:linear-gradient(130deg,var(--gold),var(--gold2));color:var(--navy);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;border-radius:12px;white-space:nowrap}
+.pkg-name{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--white);letter-spacing:.07em;margin-bottom:8px;margin-top:8px}
+.pkg-price{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--gold2);letter-spacing:.04em;margin-bottom:4px}
+.pkg-period{font-size:.76rem;color:var(--muted);margin-bottom:18px}
+.pkg-features{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
+.pkg-features li{font-size:.82rem;color:var(--text);display:flex;align-items:center;gap:9px}
+.pkg-features li::before{content:'';width:16px;height:16px;border-radius:50%;background:rgba(45,114,210,.15);border:1px solid rgba(45,114,210,.3);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.check-icon{color:var(--sky2);font-weight:700;font-size:.7rem}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .pkg-grid{grid-template-columns:repeat(2,1fr)}
+  .vehicle-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:900px){
+  .page-hero{padding:0 28px 40px}
+  .how-grid{grid-template-columns:repeat(2,1fr)!important}
+  .section{padding:44px 24px}
+}
+@media(max-width:600px){
+  .page-hero{height:280px;padding:0 18px 28px}
+  .ph-title{font-size:clamp(2rem,8vw,2.8rem)}
+  .ph-sub{font-size:.82rem}
+  .pkg-grid{grid-template-columns:1fr}
+  .vehicle-grid{grid-template-columns:1fr}
+  .how-grid{grid-template-columns:1fr!important}
+  .section{padding:36px 16px}
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar" id="nb">
+  <div class="nb-brand" onclick="location.href='index.html'">
+    <img src="images/Travencia.png" alt="Travencia" class="nb-logo"/>
+    <div class="nb-text"><span class="nb-name">Travencia</span><span class="nb-tag">Explore · Dream · Discover</span></div>
+  </div>
+  <div class="nb-links" id="nbLinks">
+    <a href="index.html">Home</a>
+    <a href="destinations.html">Destinations</a>
+    <a href="activities.html">Activities</a>
+    <a href="services.html" class="active">Services</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="nb-right" id="nbRight">
+    <button class="btn-ghost" onclick="openAuth('login')">Sign In</button>
+    <button class="btn-cta" onclick="location.href='destinations.html'">Book a Trip</button>
+  </div>
+  <button class="nb-ham" id="nbHamburger" aria-label="Menu" aria-expanded="false">&#9776;</button>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="ph-bg"></div>
+  <div class="ph-grad"></div>
+  <div class="ph-content">
+    <div class="ph-eyebrow">Ground Services</div>
+    <h1 class="ph-title">Travel in <span class="g">Complete Comfort</span></h1>
+    <p class="ph-sub">Every arrival deserves a great first impression. Private vehicles, executive transfers, and dedicated drivers — available from the moment you land, at every destination we serve.</p>
+  </div>
+</div>
+
+<!-- VEHICLES -->
+<section class="section" id="vehicles">
+  <div class="s-head reveal">
+    <span class="s-eyebrow">Our Fleet</span>
+    <h2 class="s-h1">The Right Vehicle, <span class="g">Every Time</span></h2>
+    <div class="gold-rule"></div>
+    <p class="s-sub">Economy transfers to executive limousines — fully air-conditioned, flight-tracked, and driven by multilingual professionals who know your destination.</p>
+  </div>
+  <div class="vehicle-grid" id="vehicleGrid"></div>
+</section>
+
+<!-- PACKAGES -->
+<section class="section alt">
+  <div class="s-head reveal">
+    <span class="s-eyebrow">Travel Packages</span>
+    <h2 class="s-h1">Everything <span class="g">Included</span></h2>
+    <div class="gold-rule"></div>
+    <p class="s-sub">Three tiers. One promise: nothing left to organize. Flights, hotel, activities, and ground transport — all bundled, all confirmed before you board.</p>
+  </div>
+  <div class="pkg-grid">
+    <div class="pkg-card reveal">
+      <div class="pkg-name">Explorer</div>
+      <div class="pkg-price">$899 <small style="font-size:.65rem;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif">USD</small></div>
+      <div class="pkg-period">Per person · 5–7 nights</div>
+      <ul class="pkg-features">
+        <li><span class="check-icon">&#10003;</span> Return flights included</li>
+        <li><span class="check-icon">&#10003;</span> 3-star accommodation</li>
+        <li><span class="check-icon">&#10003;</span> Airport transfers</li>
+        <li><span class="check-icon">&#10003;</span> 1 guided activity</li>
+        <li><span class="check-icon">&#10003;</span> 24/7 WhatsApp support</li>
+      </ul>
+      <button class="btn-outline" style="width:100%;justify-content:center" onclick="location.href='destinations.html'">Explore Destinations</button>
+    </div>
+    <div class="pkg-card featured reveal">
+      <div class="pkg-badge">Most Popular</div>
+      <div class="pkg-name">Premium</div>
+      <div class="pkg-price">$1,699 <small style="font-size:.65rem;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif">USD</small></div>
+      <div class="pkg-period">Per person · 7–10 nights</div>
+      <ul class="pkg-features">
+        <li><span class="check-icon">&#10003;</span> Return flights included</li>
+        <li><span class="check-icon">&#10003;</span> 4–5 star accommodation</li>
+        <li><span class="check-icon">&#10003;</span> Private airport transfer (SUV)</li>
+        <li><span class="check-icon">&#10003;</span> 3 guided activities</li>
+        <li><span class="check-icon">&#10003;</span> Personal driver (1 day)</li>
+        <li><span class="check-icon">&#10003;</span> Travel insurance</li>
+        <li><span class="check-icon">&#10003;</span> Priority WhatsApp support</li>
+      </ul>
+      <button class="btn-primary" style="width:100%;justify-content:center" onclick="location.href='destinations.html'">Book Premium</button>
+    </div>
+    <div class="pkg-card reveal">
+      <div class="pkg-name">Luxury</div>
+      <div class="pkg-price">$3,299 <small style="font-size:.65rem;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif">USD</small></div>
+      <div class="pkg-period">Per person · 10–14 nights</div>
+      <ul class="pkg-features">
+        <li><span class="check-icon">&#10003;</span> Business class flights</li>
+        <li><span class="check-icon">&#10003;</span> 5-star luxury accommodation</li>
+        <li><span class="check-icon">&#10003;</span> Luxury vehicle transfers</li>
+        <li><span class="check-icon">&#10003;</span> 5 premium activities</li>
+        <li><span class="check-icon">&#10003;</span> Personal driver (3 days)</li>
+        <li><span class="check-icon">&#10003;</span> Concierge service</li>
+        <li><span class="check-icon">&#10003;</span> Travel insurance</li>
+        <li><span class="check-icon">&#10003;</span> Dedicated travel advisor</li>
+      </ul>
+      <button class="btn-outline" style="width:100%;justify-content:center" onclick="location.href='contact.html'">Contact Us</button>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="s-head reveal" style="text-align:center;max-width:600px;margin:0 auto 52px">
+    <span class="s-eyebrow">Simple Process</span>
+    <h2 class="s-h1">From Click <span class="g">to Takeoff</span></h2>
+    <div class="gold-rule" style="margin:14px auto"></div>
+    <p class="s-sub" style="max-width:100%">Four steps stand between you and your next great adventure.</p>
+  </div>
+  <div class="how-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px">
+    <div class="wc reveal">
+      <div style="width:44px;height:44px;background:linear-gradient(130deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--navy)">1</div>
+      <div class="wc-title">Pick Your Destination</div>
+      <p class="wc-desc">Twenty world-class destinations across five continents. Each one curated, tested, and loved by travellers just like you.</p>
+    </div>
+    <div class="wc reveal">
+      <div style="width:44px;height:44px;background:linear-gradient(130deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--navy)">2</div>
+      <div class="wc-title">Build Your Package</div>
+      <p class="wc-desc">Set your dates, choose your hotel tier, add activities, and select ground transport. Every option is priced in real time.</p>
+    </div>
+    <div class="wc reveal">
+      <div style="width:44px;height:44px;background:linear-gradient(130deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--navy)">3</div>
+      <div class="wc-title">Pay &amp; Confirm</div>
+      <p class="wc-desc">Submit your payment securely. Our team verifies everything and sends your confirmation via WhatsApp — typically within 2 hours.</p>
+    </div>
+    <div class="wc reveal">
+      <div style="width:44px;height:44px;background:linear-gradient(130deg,var(--gold),var(--gold2));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--navy)">4</div>
+      <div class="wc-title">Arrive in Style</div>
+      <p class="wc-desc">Your driver is waiting. Your hotel is ready. Your itinerary is set. The only thing left to do is enjoy every single moment.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-grid">
+    <div><img src="images/Travencia.png" alt="Travencia" class="ft-logo"/><div class="ft-name">Travencia</div><p class="ft-tagline">Flights, hotels, activities, and private transfers — every detail handled, every destination mastered.</p></div>
+    <div><div class="ft-col-h">Destinations</div><ul class="ft-links"><li><a href="destinations.html">All Destinations</a></li><li><a href="destinations.html">Bali</a></li><li><a href="destinations.html">Dubai</a></li><li><a href="destinations.html">Maldives</a></li></ul></div>
+    <div><div class="ft-col-h">Services</div><ul class="ft-links"><li><a href="activities.html">Activities</a></li><li><a href="services.html">Vehicle Transfers</a></li><li><a href="services.html">Personal Driver</a></li><li><a href="services.html">Packages</a></li></ul></div>
+    <div><div class="ft-col-h">Company</div><ul class="ft-links"><li><a href="contact.html">About</a></li><li><a href="contact.html">Contact</a></li><li><a href="#">Privacy</a></li><li><a href="#">Terms</a></li></ul></div>
+  </div>
+  <div class="ft-bot"><span class="ft-copy">© 2026 Travencia. All rights reserved.</span><span class="ft-copy">Explore · Dream · Discover</span></div>
+</footer>
+
+<!-- VEHICLE BOOKING MODAL -->
+<div class="overlay" id="vModal">
+  <div class="modal" style="max-width:560px">
+    <button class="m-close" onclick="closeM('vModal')">&#10005;</button>
+    <div class="driver-form" id="vModalBody"></div>
+  </div>
+</div>
+
+<!-- AUTH -->
+
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/booking.js"></script>
+<script>
+// Wait for data.js to be ready
+if (typeof window.TV === 'undefined') {
+  console.error('data.js failed to load!');
+} else {
+  const {DESTINATIONS, ACCOMMODATIONS, ACTIVITIES, COUNTRIES, fmt, calcPrice, sendWA, genCode, ADMIN_WHATSAPP, ADMIN_PAYPAL_EMAIL} = window.TV;
+}
+
+const VEHICLES = [
+  {id:1,name:'Economy Transfer',type:'sedan',desc:'Clean, comfortable sedan for solo travelers or couples. Ideal for airport pickups and short transfers.',features:['1–3 passengers','Air conditioning','WiFi on request','Flight tracking'],price:30,unit:'per transfer',badge:'popular'},
+  {id:2,name:'Premium SUV',type:'suv',desc:'Spacious luxury SUV for families or small groups up to 6. Complimentary water and WiFi included.',features:['1–6 passengers','Air conditioning','WiFi included','Water provided','Professional driver'],price:65,unit:'per transfer',badge:'premium'},
+  {id:3,name:'Minivan Group Transfer',type:'van',desc:'Comfortable minivan for groups up to 9. Perfect for team travel or family reunions.',features:['1–9 passengers','Air conditioning','Luggage space','Meet & greet service'],price:90,unit:'per transfer',badge:null},
+  {id:4,name:'Luxury Sedan (VIP)',type:'luxury',desc:'Premium Mercedes or BMW for executive and VIP transfers. Leather interior, champagne on arrival.',features:['1–3 passengers','Premium leather','Champagne welcome','Discretion guaranteed','Meet & greet'],price:120,unit:'per transfer',badge:'premium'},
+  {id:5,name:'Personal Driver — Half Day',type:'driver',desc:'Dedicated personal driver for 4–5 hours. Explore freely with a knowledgeable local driver.',features:['4–5 hours','Any vehicle class','Local knowledge','Flexible itinerary','Air conditioning'],price:75,unit:'4–5 hours',badge:'popular'},
+  {id:6,name:'Personal Driver — Full Day',type:'driver',desc:'Your own driver for the full day (8–10 hours). Visit multiple locations at your own pace with a multilingual local guide-driver.',features:['8–10 hours','Multilingual driver','Multiple stops','Flexible routes','Lunch break included'],price:130,unit:'full day',badge:'new'},
+  {id:7,name:'Airport Bus (Group)',type:'bus',desc:'Shared airport bus service for large groups of 10–25 people. Great for corporate or event travel.',features:['10–25 passengers','Air conditioning','Luggage compartment','Set pickup times'],price:180,unit:'per transfer',badge:null},
+  {id:8,name:'Scenic Tour Driver',type:'driver',desc:'Expert local driver for sightseeing tours. They know every viewpoint, restaurant, and hidden gem in the destination.',features:['Full or half day','Expert local guide','Curated stops','Photography assistance','Commentary included'],price:150,unit:'full day',badge:'new'}
+];
+
+function buildVehicles(){
+  const grid = document.getElementById('vehicleGrid');
+  grid.innerHTML = VEHICLES.map(v => `
+    <div class="v-card reveal">
+      <div class="v-top ${v.type}">
+        <div class="v-vehicle-label">${v.name.toUpperCase().substr(0,6)}</div>
+        ${v.badge ? `<span class="v-badge ${v.badge}">${v.badge.charAt(0).toUpperCase()+v.badge.slice(1)}</span>` : ''}
+      </div>
+      <div class="v-body">
+        <div class="v-name">${v.name}</div>
+        <p class="v-desc">${v.desc}</p>
+        <div class="v-features">${v.features.map(f=>`<span class="v-feature">${f}</span>`).join('')}</div>
+        <div class="v-foot">
+          <div>
+            <div class="v-price-lbl">From</div>
+            <div class="v-price">$${v.price} <small>USD / ${v.unit}</small></div>
+          </div>
+          <button class="btn-book-v" onclick="openVModal(${v.id})">Book Now</button>
+        </div>
+      </div>
+    </div>`).join('');
+  observeReveal();
+}
+
+function openVModal(vId){
+  const v = VEHICLES.find(x => x.id === vId);
+  if(!v) return;
+  document.getElementById('vModalBody').innerHTML = `
+    <div class="driver-form-title">Book <span>${v.name}</span></div>
+    <div class="driver-summary">
+      <div>
+        <div class="ds-name">${v.name}</div>
+        <div style="font-size:.76rem;color:var(--muted);margin-top:3px">${v.unit}</div>
+      </div>
+      <div class="ds-price">$${v.price} <span style="font-size:.72rem;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif">USD</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="fg"><label>First Name *</label><input type="text" id="v_fn" placeholder="Jean"/></div>
+      <div class="fg"><label>Last Name *</label><input type="text" id="v_ln" placeholder="Dupont"/></div>
+    </div>
+    <div class="fg"><label>WhatsApp Number *</label><input type="tel" id="v_phone" placeholder="+1 (512) XXX-XXXX"/></div>
+    <div class="fg"><label>Destination / Airport *</label>
+      <select id="v_dest"><option value="">Select destination</option>${DESTINATIONS.map(d=>`<option value="${d.name}, ${d.country}">${d.name}, ${d.country}</option>`).join('')}</select>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="fg"><label>Pickup Date *</label><input type="date" id="v_date" min="${new Date().toISOString().split('T')[0]}"/></div>
+      <div class="fg"><label>Pickup Time *</label><input type="time" id="v_time"/></div>
+    </div>
+    <div class="fg"><label>Flight Number (if airport transfer)</label><input type="text" id="v_flight" placeholder="e.g. AF 456"/></div>
+    <div class="fg"><label>Passengers</label>
+      <select id="v_pax"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7+">7+</option></select>
+    </div>
+    <div class="fg"><label>Special Notes</label><textarea id="v_notes" placeholder="Luggage, child seats, special requirements..."></textarea></div>
+    <div class="gerr" id="v_err"></div>
+    <button class="btn-whatsapp" onclick="submitVehicle(${vId})">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Confirm via WhatsApp
+    </button>`;
+  openM('vModal');
+}
+
+function submitVehicle(vId){
+  const v = VEHICLES.find(x => x.id === vId);
+  const fn = document.getElementById('v_fn').value.trim();
+  const ln = document.getElementById('v_ln').value.trim();
+  const phone = document.getElementById('v_phone').value.trim();
+  const dest = document.getElementById('v_dest').value;
+  const date = document.getElementById('v_date').value;
+  const time = document.getElementById('v_time').value;
+  const err = document.getElementById('v_err');
+  if(!fn||!phone||!dest||!date){err.textContent='Please fill in all required fields.';err.style.display='block';return;}
+  err.style.display='none';
+  const flight = document.getElementById('v_flight').value;
+  const pax = document.getElementById('v_pax').value;
+  const notes = document.getElementById('v_notes').value;
+  const code = genCode();
+  const msg = `TRAVENCIA VEHICLE REQUEST\n\nCode: ${code}\nService: ${v.name} ($${v.price} USD/${v.unit})\nDestination: ${dest}\nDate: ${date} at ${time}\nPassengers: ${pax}\n${flight?`Flight: ${flight}\n`:''}\nCLIENT\nName: ${fn} ${ln}\nWhatsApp: ${phone}\n${notes?`Notes: ${notes}`:''}`;
+  sendWA(ADMIN_WHATSAPP, msg);
+  closeM('vModal');
+  alert(`Vehicle request sent! Code: ${code}\nOur team will confirm availability via WhatsApp shortly.`);
+}
+
+
+function openM(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
+function closeM(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeM(o.id);}));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.querySelectorAll('.overlay.open').forEach(o=>closeM(o.id));});
+function observeReveal(){const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in');}),{threshold:.08});document.querySelectorAll('.reveal').forEach(el=>io.observe(el));}
+window.addEventListener('scroll',()=>document.getElementById('nb').classList.toggle('scrolled',window.scrollY>60));
+buildVehicles();observeReveal();
+</script>
+
+</body>
+</html>
