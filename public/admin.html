@@ -635,10 +635,14 @@ async function viewRes(id) {
         </div>
       </div>
       <div class="modal-actions">
-        <input class="admin-note" id="modal_note" placeholder="Add admin note (optional)…" value="${r.admin_notes||''}"/>
-        ${r.status==='pending'?`<button class="btn-action btn-confirm" onclick="updateResStatus(${r.id},'confirmed')">✓ Confirm</button>`:''}
+        <input class="admin-note" id="modal_note" placeholder="Add a note to the client (sent in confirmation email)…" value="${r.admin_notes||''}"/>
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:6px">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Client will be emailed automatically on Confirm or Cancel
+        </div>
+        ${r.status==='pending'?`<button class="btn-action btn-confirm" onclick="updateResStatus(${r.id},'confirmed')">✓ Confirm &amp; Notify Client</button>`:''}
         ${r.status==='confirmed'?`<button class="btn-action btn-complete" onclick="updateResStatus(${r.id},'completed')">✓ Mark Completed</button>`:''}
-        ${['pending','confirmed'].includes(r.status)?`<button class="btn-action btn-cancel-r" onclick="updateResStatus(${r.id},'cancelled')">✗ Cancel</button>`:''}
+        ${['pending','confirmed'].includes(r.status)?`<button class="btn-action btn-cancel-r" onclick="updateResStatus(${r.id},'cancelled')">✗ Cancel &amp; Notify Client</button>`:''}
         <button class="btn-action btn-delete" onclick="deleteRes(${r.id},'${r.reservation_code}')">🗑 Delete</button>
       </div>
     `;
@@ -652,7 +656,8 @@ async function updateResStatus(id, status) {
     await api(`/api/admin/reservations/${id}/status`, {
       method: 'PATCH', body: JSON.stringify({ status, admin_notes: note || undefined })
     });
-    toast(`Reservation ${status}!`, 'ok');
+    const emailNote = (status === 'confirmed' || status === 'cancelled') ? ' — client notified by email' : '';
+    toast(`Reservation ${status}!${emailNote}`, 'ok');
     closeModal();
     if (document.getElementById('page-reservations').classList.contains('active')) loadReservations(_resPage);
     loadStats();

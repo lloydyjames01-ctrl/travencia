@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<meta name="tv-wa" content="REPLACE_WITH_WHATSAPP_NUMBER"/>
-<meta name="tv-email" content="travenciaagency@gmail.com"/>
+<meta name="tv-wa" content="13082533668"/>
+  <meta name="tv-email" content="travenciaagency@gmail.com"/>
 <title>Contact — Travencia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;family=Bebas+Neue&amp;display=swap" rel="stylesheet"/>
@@ -66,7 +66,8 @@
     <img src="images/Travencia.png" alt="Travencia" class="nb-logo"/>
     <div class="nb-text"><span class="nb-name">Travencia</span><span class="nb-tag">Explore · Dream · Discover</span></div>
   </div>
-  <div class="nb-links">
+  <button class="nb-ham" id="nbHam" onclick="toggleNav()" aria-label="Menu">☰</button>
+  <div class="nb-links" id="nbLinks">
     <a href="index.html">Home</a>
     <a href="destinations.html">Destinations</a>
     <a href="activities.html">Activities</a>
@@ -106,8 +107,18 @@
           </div>
           <div>
             <div class="cd-label">WhatsApp Business</div>
-            <div class="cd-value">+237 6XX XXX XXX</div>
+            <div class="cd-value">+1 (308) 253-3668</div>
             <div class="cd-sub">Available 24/7 — Fastest response</div>
+          </div>
+        </div>
+        <div class="cd-item">
+          <div class="cd-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.73a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div>
+            <div class="cd-label">Phone</div>
+            <div class="cd-value">+1 (308) 253-3668</div>
+            <div class="cd-sub">Call or text anytime</div>
           </div>
         </div>
         <div class="cd-item">
@@ -185,13 +196,13 @@
       <div class="contact-form-card">
         <div id="formContent">
           <div class="cf-title">Send Us a Message</div>
-          <p class="cf-sub">Complete the form below and a travel specialist will reach out on WhatsApp within 2 hours.</p>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <p class="cf-sub">Complete the form below and a travel specialist will reach out within 2 hours — by WhatsApp, phone, or email.</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px" class="fg-row-inner">
             <div class="fg"><label>First Name *</label><input type="text" id="cf_fn" placeholder="Jean"/></div>
-            <div class="fg"><label>Last Name *</label><input type="text" id="cf_ln" placeholder="Dupont"/></div>
+            <div class="fg"><label>Last Name</label><input type="text" id="cf_ln" placeholder="Dupont"/></div>
           </div>
           <div class="fg"><label>Email Address *</label><input type="email" id="cf_email" placeholder="jean@email.com"/></div>
-          <div class="fg"><label>WhatsApp Number *</label><input type="tel" id="cf_phone" placeholder="+237 6XX XXX XXX"/></div>
+          <div class="fg"><label>Phone / WhatsApp</label><input type="tel" id="cf_phone" placeholder="+1 (308) 253-3668"/></div>
           <div class="fg"><label>Subject</label>
             <div class="subject-btns" id="subjectBtns">
               <button class="sb-btn active" data-s="Trip Inquiry" onclick="selSubject(this)">Trip Inquiry</button>
@@ -205,11 +216,19 @@
             <select id="cf_dest"><option value="">Select a destination (optional)</option></select>
           </div>
           <div class="fg"><label>Your Message *</label><textarea id="cf_msg" placeholder="Tell us about your dream trip, group size, dates, budget, or any questions..."></textarea></div>
-          <div class="gerr" id="cf_err"></div>
-          <button class="btn-whatsapp" style="margin-top:8px" onclick="sendContact()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            Send via WhatsApp
-          </button>
+          <div class="gerr" id="cf_err" style="display:none;color:#f06060;font-size:.82rem;margin-bottom:10px"></div>
+
+          <!-- Send options -->
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+            <button class="btn-whatsapp" style="flex:1;min-width:140px" onclick="sendContact('whatsapp')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              Send via WhatsApp
+            </button>
+            <button onclick="sendContact('email')" style="flex:1;min-width:140px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;background:linear-gradient(135deg,var(--sky),var(--blue2));color:#fff;border:none;border-radius:9px;font-family:var(--font);font-weight:700;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:all .3s" id="btnEmail">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Send via Email
+            </button>
+          </div>
         </div>
         <!-- Success state -->
         <div class="success-state" id="successState">
@@ -217,7 +236,7 @@
             <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--white);letter-spacing:.08em;margin-bottom:10px">Message Sent!</div>
-          <p style="font-size:.86rem;color:var(--muted);line-height:1.75;max-width:360px;margin:0 auto 22px">Your WhatsApp has been opened with your message pre-filled. Our team will respond within 2 hours.</p>
+          <p id="successMsg" style="font-size:.86rem;color:var(--muted);line-height:1.75;max-width:360px;margin:0 auto 22px">Our team will respond within 2 hours.</p>
           <button class="btn-outline" onclick="resetForm()">Send Another Message</button>
         </div>
       </div>
@@ -261,7 +280,7 @@ function selSubject(btn){
   activeSubject = btn.dataset.s;
 }
 
-function sendContact(){
+function sendContact(mode){
   const fn = document.getElementById('cf_fn').value.trim();
   const ln = document.getElementById('cf_ln').value.trim();
   const email = document.getElementById('cf_email').value.trim();
@@ -270,8 +289,8 @@ function sendContact(){
   const msg = document.getElementById('cf_msg').value.trim();
   const err = document.getElementById('cf_err');
 
-  if(!fn || !email || !phone || !msg){
-    err.textContent = 'Please fill in all required fields (name, email, WhatsApp, and message).';
+  if(!fn || !email || !msg){
+    err.textContent = 'Please fill in first name, email, and message.';
     err.style.display = 'block';
     return;
   }
@@ -282,8 +301,21 @@ function sendContact(){
   }
   err.style.display = 'none';
 
-  const waMsg = `TRAVENCIA INQUIRY\n\nSubject: ${activeSubject}\nFrom: ${fn} ${ln}\nEmail: ${email}\nWhatsApp: ${phone}\n${dest?`Destination: ${dest}\n`:''}\nMessage:\n${msg}`;
-  sendWA(ADMIN_WHATSAPP, waMsg);
+  // Always POST to API (saves to DB + sends admin email)
+  fetch('/api/contact', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ first_name:fn, last_name:ln, email, phone:phone||null, subject:activeSubject, destination:dest||null, message:msg })
+  }).catch(e => console.warn('[contact api]', e));
+
+  if(mode === 'whatsapp'){
+    const waMsg = `TRAVENCIA INQUIRY\n\nSubject: ${activeSubject}\nFrom: ${fn} ${ln}\nEmail: ${email}\nPhone: ${phone||'—'}\n${dest?`Destination: ${dest}\n`:''}\nMessage:\n${msg}`;
+    const waNum = typeof ADMIN_WHATSAPP !== 'undefined' ? ADMIN_WHATSAPP : '13082533668';
+    window.open('https://wa.me/' + waNum.replace(/\D/g,'') + '?text=' + encodeURIComponent(waMsg), '_blank');
+    document.getElementById('successMsg').textContent = 'Your WhatsApp has opened with your message pre-filled. Our team will reply within 2 hours.';
+  } else {
+    document.getElementById('successMsg').textContent = 'Your message has been sent by email. A confirmation has been sent to ' + email + '. Our team will reply within 24 hours.';
+  }
 
   // Show success
   document.getElementById('formContent').style.display = 'none';
@@ -312,6 +344,14 @@ function toggleFaq(q){
 }
 
 
+function toggleNav(){
+  const links = document.getElementById('nbLinks');
+  links.classList.toggle('open');
+}
+// Close nav on link click (mobile)
+document.querySelectorAll('.nb-links a').forEach(a=>a.addEventListener('click',()=>{
+  document.getElementById('nbLinks').classList.remove('open');
+}));
 function openM(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';}
 function closeM(id){document.getElementById(id).classList.remove('open');document.body.style.overflow='';}
 document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeM(o.id);}));
