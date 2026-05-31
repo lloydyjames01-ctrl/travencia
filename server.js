@@ -40,13 +40,6 @@ async function ensureSchema() {
       console.warn('[schema]', e.message);
     }
   }
-  try {
-    await db.query(`ALTER TABLE reservations ADD COLUMN IF NOT EXISTS ref VARCHAR(32) NULL DEFAULT NULL`);
-  } catch (e) {
-    if (!String(e.message).includes('Duplicate column') && !String(e.message).includes('IF NOT EXISTS')) {
-      console.warn('[schema ref]', e.message);
-    }
-  }
 }
 
 function genCode(prefix = 'TV') {
@@ -214,7 +207,6 @@ app.post('/api/reservations', authMiddleware, async (req, res) => {
       selected_activities,
       flight_cost, accommodation_cost, activities_cost, vehicles_cost,
       subtotal, taxes, total_amount, is_peak_season, notes,
-      ref                    // agent ref (agent1..agent8) or null
     } = req.body;
 
     if (!destination_id || !departure_date || !return_date || !payment_method)
@@ -229,8 +221,8 @@ app.post('/api/reservations', authMiddleware, async (req, res) => {
         flight_cost, accommodation_cost, activities_cost, vehicles_cost,
         subtotal, taxes, total_amount, is_peak_season,
         payment_method, payment_data_enc,
-        selected_activities, notes, ref, status, ip_address)
-       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+        selected_activities, notes, status, ip_address)
+       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       [
         code, user.id, destination_id, dest_name_override || null, accommodation_id || null,
         user.first_name, user.last_name, user.email,
@@ -244,7 +236,7 @@ app.post('/api/reservations', authMiddleware, async (req, res) => {
         payment_method,
         JSON.stringify({ method: payment_method }),
         JSON.stringify(selected_activities || []),
-        notes || null, ref || null, 'pending', req.ip
+        notes || null, 'pending', req.ip
       ]
     );
 
