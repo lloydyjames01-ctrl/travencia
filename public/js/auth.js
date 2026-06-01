@@ -99,6 +99,13 @@ function buildAuthModal() {
             <input type="tel" id="tvRegWa" placeholder="+1 (512) XXX-XXXX" value="+1 " style="width:100%;box-sizing:border-box"/>
           </div>
           <div class="fg" style="margin-bottom:14px">
+            <label style="font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Country *</label>
+            <select id="tvRegCountry" style="width:100%;box-sizing:border-box">
+              <option value="">— Select your country —</option>
+              <option value="AF">Afghanistan</option><option value="AL">Albania</option><option value="DZ">Algeria</option><option value="AO">Angola</option><option value="AR">Argentina</option><option value="AU">Australia</option><option value="AT">Austria</option><option value="BE">Belgium</option><option value="BJ">Benin</option><option value="BO">Bolivia</option><option value="BR">Brazil</option><option value="BF">Burkina Faso</option><option value="BI">Burundi</option><option value="CM">Cameroon</option><option value="CA">Canada</option><option value="CF">Central African Republic</option><option value="TD">Chad</option><option value="CL">Chile</option><option value="CN">China</option><option value="CO">Colombia</option><option value="CG">Congo</option><option value="CD">DR Congo</option><option value="CR">Costa Rica</option><option value="CI">Côte d'Ivoire</option><option value="HR">Croatia</option><option value="CU">Cuba</option><option value="CZ">Czech Republic</option><option value="DK">Denmark</option><option value="DO">Dominican Republic</option><option value="EC">Ecuador</option><option value="EG">Egypt</option><option value="SV">El Salvador</option><option value="ET">Ethiopia</option><option value="FI">Finland</option><option value="FR">France</option><option value="GA">Gabon</option><option value="DE">Germany</option><option value="GH">Ghana</option><option value="GR">Greece</option><option value="GT">Guatemala</option><option value="GN">Guinea</option><option value="HT">Haiti</option><option value="HN">Honduras</option><option value="HK">Hong Kong</option><option value="HU">Hungary</option><option value="IN">India</option><option value="ID">Indonesia</option><option value="IR">Iran</option><option value="IQ">Iraq</option><option value="IE">Ireland</option><option value="IL">Israel</option><option value="IT">Italy</option><option value="JM">Jamaica</option><option value="JP">Japan</option><option value="JO">Jordan</option><option value="KE">Kenya</option><option value="KR">South Korea</option><option value="KW">Kuwait</option><option value="LB">Lebanon</option><option value="LR">Liberia</option><option value="LY">Libya</option><option value="ML">Mali</option><option value="MR">Mauritania</option><option value="MX">Mexico</option><option value="MA">Morocco</option><option value="MZ">Mozambique</option><option value="MM">Myanmar</option><option value="NA">Namibia</option><option value="NL">Netherlands</option><option value="NZ">New Zealand</option><option value="NI">Nicaragua</option><option value="NE">Niger</option><option value="NG">Nigeria</option><option value="NO">Norway</option><option value="OM">Oman</option><option value="PK">Pakistan</option><option value="PA">Panama</option><option value="PY">Paraguay</option><option value="PE">Peru</option><option value="PH">Philippines</option><option value="PL">Poland</option><option value="PT">Portugal</option><option value="QA">Qatar</option><option value="RO">Romania</option><option value="RU">Russia</option><option value="RW">Rwanda</option><option value="SA">Saudi Arabia</option><option value="SN">Senegal</option><option value="SL">Sierra Leone</option><option value="SG">Singapore</option><option value="ZA">South Africa</option><option value="ES">Spain</option><option value="SD">Sudan</option><option value="SE">Sweden</option><option value="CH">Switzerland</option><option value="TW">Taiwan</option><option value="TZ">Tanzania</option><option value="TH">Thailand</option><option value="TG">Togo</option><option value="TN">Tunisia</option><option value="TR">Turkey</option><option value="UG">Uganda</option><option value="UA">Ukraine</option><option value="AE">United Arab Emirates</option><option value="GB">United Kingdom</option><option value="US">United States</option><option value="UY">Uruguay</option><option value="VE">Venezuela</option><option value="VN">Vietnam</option><option value="YE">Yemen</option><option value="ZM">Zambia</option><option value="ZW">Zimbabwe</option>
+            </select>
+          </div>
+          <div class="fg" style="margin-bottom:14px">
             <label style="font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px">Password *</label>
             <input type="password" id="tvRegPass" placeholder="Min. 6 characters" style="width:100%;box-sizing:border-box" onkeydown="if(event.key==='Enter')doRegister()"/>
           </div>
@@ -201,13 +208,15 @@ async function doLogin() {
 
 // ── Register ──────────────────────────────────────────────
 async function doRegister() {
-  const fn    = (document.getElementById('tvRegFn')?.value || '').trim();
-  const ln    = (document.getElementById('tvRegLn')?.value || '').trim();
-  const email = (document.getElementById('tvRegEmail')?.value || '').trim();
-  const wa    = (document.getElementById('tvRegWa')?.value || '').trim();
-  const pass  = document.getElementById('tvRegPass')?.value || '';
-  const pass2 = document.getElementById('tvRegPass2')?.value || '';
+  const fn      = (document.getElementById('tvRegFn')?.value || '').trim();
+  const ln      = (document.getElementById('tvRegLn')?.value || '').trim();
+  const email   = (document.getElementById('tvRegEmail')?.value || '').trim();
+  const wa      = (document.getElementById('tvRegWa')?.value || '').trim();
+  const country = (document.getElementById('tvRegCountry')?.value || '').trim();
+  const pass    = document.getElementById('tvRegPass')?.value || '';
+  const pass2   = document.getElementById('tvRegPass2')?.value || '';
   if (!fn || !ln || !email || !pass) return showAuthErr('Please fill in all required fields.');
+  if (!country) return showAuthErr('Please select your country.');
   if (pass.length < 6) return showAuthErr('Password must be at least 6 characters.');
   if (pass !== pass2)  return showAuthErr('Passwords do not match.');
   setAuthLoading('tvRegBtn', true);
@@ -215,7 +224,7 @@ async function doRegister() {
     const r = await fetch(AUTH_API + '/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type':'application/json' },
-      body: JSON.stringify({ first_name: fn, last_name: ln, email, password: pass, whatsapp: wa })
+      body: JSON.stringify({ first_name: fn, last_name: ln, email, password: pass, whatsapp: wa, country })
     });
     const d = await r.json();
     if (!d.success) {

@@ -489,8 +489,12 @@ function _onDestChange() {
   _bkState.acts   = [];
 
   const asel = document.getElementById('bk_acc');
-  asel.innerHTML = '<option value="">Standard (included)</option>';
-  (ACCOMMODATIONS[id] || []).forEach(a => asel.add(new Option(`${a.n} +$${a.ppn}/night`, a.id)));
+  asel.innerHTML = '<option value="" data-db-id="">Standard (included)</option>';
+  (ACCOMMODATIONS[id] || []).forEach(a => {
+    const opt = new Option(`${a.n} +$${a.ppn}/night`, a.id);
+    opt.setAttribute('data-db-id', a.id);
+    asel.add(opt);
+  });
 
   const acts = ACTIVITIES[id] || [];
   const wrap = document.getElementById('bk_acts_wrap');
@@ -701,7 +705,8 @@ function _sendPaymentWA() {
   const ret      = (document.getElementById('bk_ret')  ||{value:''}).value;
   const adults   = parseInt((document.getElementById('bk_adults')  ||{value:1}).value)  || 1;
   const children = parseInt((document.getElementById('bk_children')||{value:0}).value)  || 0;
-  const accId    = parseInt((document.getElementById('bk_acc')     ||{value:''}).value) || null;
+  const accSel2  = document.getElementById('bk_acc');
+  const accId    = accSel2 ? parseInt(accSel2.options[accSel2.selectedIndex]?.getAttribute('data-db-id')) || null : null;
   const ph       = ((document.getElementById('bk_phone') ||{value:''}).value).trim();
   const fn       = ((document.getElementById('bk_fn')    ||{value:''}).value).trim();
   const ln       = ((document.getElementById('bk_ln')    ||{value:''}).value).trim();
@@ -825,7 +830,10 @@ async function _submitBk(mode) {
   const adults   = parseInt(document.getElementById('bk_adults').value)   || 1;
   const children = parseInt(document.getElementById('bk_children').value) || 0;
   const coCode   = document.getElementById('bk_country').value || 'US';
-  const accId    = parseInt(document.getElementById('bk_acc').value)       || null;
+  // Only send accommodation_id if it's a real DB id (stored in data-db-id attribute)
+  const accSel   = document.getElementById('bk_acc');
+  const accDbId  = accSel ? parseInt(accSel.options[accSel.selectedIndex]?.getAttribute('data-db-id')) : NaN;
+  const accId    = !isNaN(accDbId) && accDbId > 0 ? accDbId : null;
   const ph       = document.getElementById('bk_phone').value.trim();
   const notes    = document.getElementById('bk_notes').value.trim();
   const p        = _bkState.pricing || {};

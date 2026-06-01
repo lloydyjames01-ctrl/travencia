@@ -3562,7 +3562,8 @@
 
     <script>
       // ══ AUTH SHARED with client index — reads same tv_token ══════════════
-      // API = window.location.origin; (defined in booking.js)
+      // Define API here so it's available before booking.js loads
+      var API = window.location.origin;
       let _wcUser = null;
 
       function getToken() {
@@ -5738,7 +5739,7 @@
     // ?ref=agentX is captured, persisted, and available to booking.js
     // IMPORTANT: keep these numbers in sync with data.js → REF_AGENTS
     (function () {
-      var ADMIN_WHATSAPP = "237653728636"; // ← Default fallback (same as data.js)
+      var ADMIN_WHATSAPP = "13082533668"; // ← Updated number
       var REF_AGENTS = {
         agent1: { name: "Agent 1", whatsapp: "15879014508" },            // +1 (587) 901-4508
         agent2: { name: "Agent 2", whatsapp: "15168245644" },            // +1 (516) 824-5644
