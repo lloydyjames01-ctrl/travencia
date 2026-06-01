@@ -304,34 +304,38 @@ function _ensureModal() {
 
 <!-- Confirmation overlay -->
 <div class="wait-overlay" id="waitOver">
-  <div class="wc-success-ball" style="width:72px;height:72px;margin:0 auto 16px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(130deg,#16a34a,#4ade80);overflow:hidden;box-shadow:0 16px 38px rgba(74,222,128,.22)">
-    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-  </div>
-  <div style="font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--white);letter-spacing:.1em">BOOKING RECEIVED</div>
-  <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--gold2);letter-spacing:.18em;margin:14px 0" id="waitCode">TV-XXXXXXXX</div>
-  <p style="font-size:.86rem;color:var(--muted);max-width:400px;line-height:1.75;margin-bottom:14px;text-align:center">
-    Your reservation is saved. Our team will confirm via WhatsApp — typically within 2 hours.
-  </p>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:400px;margin:0 auto 14px">
-    <div style="padding:9px 8px;border-radius:8px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.35);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:#86efac;text-align:center">Saved</div>
-    <div style="padding:9px 8px;border-radius:8px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.35);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:#86efac;text-align:center">Payment Review</div>
-    <div style="padding:9px 8px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(74,222,128,.14);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center">Confirmed</div>
-  </div>
-  <div style="background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:14px 18px;font-size:.8rem;color:#86efac;line-height:1.7;margin:0 auto 18px;max-width:400px;text-align:center">
-    📋 Your booking is saved. Send the details to our team to confirm your payment method.
-  </div>
-  <div id="resList" style="width:100%;max-width:520px;margin-bottom:18px"></div>
-  <div style="display:flex;flex-direction:column;gap:10px;max-width:400px;width:100%;align-items:center">
-    <button class="wa-btn" style="width:100%;padding:13px 28px" onclick="_sendPaymentWA()">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-      Send Details via WhatsApp
-    </button>
-    <div class="send-divider" style="width:100%"><span>or</span></div>
-    <button class="email-btn" id="waitEmailBtn" style="width:100%;margin-bottom:0" onclick="_sendPaymentEmail()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      Send Details via Email
-    </button>
-    <button class="btn-outline" onclick="document.getElementById('waitOver').classList.remove('open')" style="width:100%">Close</button>
+  <div style="position:relative;width:100%;max-width:480px;max-height:92vh;overflow-y:auto;background:var(--card,#0e1a2e);border:1px solid rgba(45,114,210,.18);border-radius:20px;padding:32px 24px 28px;display:flex;flex-direction:column;align-items:center;text-align:center;-webkit-overflow-scrolling:touch">
+    <!-- Close X -->
+    <button onclick="_closeWaitOver()" style="position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--muted,#8899aa);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;z-index:2" onmouseover="this.style.background='rgba(255,255,255,.12)'" onmouseout="this.style.background='rgba(255,255,255,.06)'">&#10005;</button>
+    <!-- Success icon -->
+    <div style="width:66px;height:66px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(130deg,#16a34a,#4ade80);box-shadow:0 14px 32px rgba(74,222,128,.22);margin-bottom:16px;flex-shrink:0">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.7rem;color:var(--white,#fff);letter-spacing:.1em;margin-bottom:4px">BOOKING RECEIVED</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:2rem;color:var(--gold2,#c89520);letter-spacing:.16em;margin-bottom:16px" id="waitCode">TV-XXXXXXXX</div>
+    <p style="font-size:.84rem;color:var(--muted,#8899aa);max-width:380px;line-height:1.75;margin-bottom:16px">
+      Your reservation is saved. Send the details below to our team to confirm your payment.
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;max-width:380px;margin-bottom:16px">
+      <div style="padding:8px 6px;border-radius:8px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.35);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#86efac;text-align:center">Saved</div>
+      <div style="padding:8px 6px;border-radius:8px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.35);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#86efac;text-align:center">Pending Review</div>
+      <div style="padding:8px 6px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(74,222,128,.14);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted,#8899aa);text-align:center">Confirmed</div>
+    </div>
+    <div id="resList" style="width:100%;max-width:420px;margin-bottom:16px"></div>
+    <!-- Action buttons -->
+    <div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:380px">
+      <button class="wa-btn" style="width:100%;margin-bottom:0" onclick="_sendPaymentWA()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Send via WhatsApp
+      </button>
+      <div class="send-divider" style="width:100%"><span>or</span></div>
+      <button class="email-btn" id="waitEmailBtn" style="width:100%;margin-bottom:0" onclick="_sendPaymentEmail(this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Send via Email
+      </button>
+      <button onclick="_closeWaitOver()" style="width:100%;padding:12px;background:transparent;border:1.5px solid rgba(45,114,210,.25);border-radius:9px;color:var(--sky2,#5ba4f5);font-size:.83rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .25s" onmouseover="this.style.background='rgba(45,114,210,.1)'" onmouseout="this.style.background='transparent'">Close</button>
+    </div>
+    <div id="waitEmailFeedback" style="display:none;margin-top:14px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.25);border-radius:8px;padding:11px 16px;font-size:.8rem;color:#86efac;width:100%;max-width:380px;text-align:center"></div>
   </div>
 </div>`;
 
@@ -891,14 +895,13 @@ async function _submitBk(mode) {
     _bkState._sendMode = mode || 'whatsapp';
     if (btn) { btn.disabled = false; btn.textContent = 'Confirm & Submit'; }
     _closeM('bookModal');
-    // Show success overlay
+    // Show success overlay, then auto-open chosen send method
     setTimeout(function() { _showWait(code, mode); }, 400);
-    // Auto-trigger chosen send method
-    if (mode === 'email') {
-      setTimeout(function() { _sendPaymentEmail(); }, 1200);
-    } else {
+    if (mode === 'whatsapp') {
       setTimeout(function() { _sendPaymentWA(); }, 1600);
     }
+    // For email mode: user sees the overlay and clicks the email button themselves
+    // (auto-opening mailto would block before overlay shows)
   } catch (err) {
     console.error('[submitBk]', err);
     if (btn) { btn.disabled = false; btn.textContent = 'Confirm & Submit'; }
@@ -921,11 +924,69 @@ function _showWait(code) {
         <div style="font-size:.74rem;color:var(--muted);margin-top:4px">${fmt ? '$'+fmt(r.total) : r.total} USD</div>
       </div>
     </div>`).join('');
-  document.getElementById('waitOver').classList.add('open');
+  // Reset email feedback
+  const fb = document.getElementById('waitEmailFeedback');
+  if (fb) { fb.style.display = 'none'; fb.textContent = ''; }
+  const wo = document.getElementById('waitOver');
+  wo.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function _closeWaitOver() {
+  const wo = document.getElementById('waitOver');
+  if (wo) wo.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ── Send booking details by email (opens mailto) ───────────
+function _sendPaymentEmail(btn) {
+  const { DESTINATIONS, fmt, ADMIN_EMAIL } = window.TV || {};
+  const p    = _bkState.pricing || {};
+  const dest = DESTINATIONS ? DESTINATIONS.find(x => x.id === _bkState.destId) : null;
+  const fn   = ((document.getElementById('bk_fn')  ||{}).value || '').trim();
+  const ln   = ((document.getElementById('bk_ln')  ||{}).value || '').trim();
+  const em   = ((document.getElementById('bk_email')||{}).value || '').trim();
+  const ph   = ((document.getElementById('bk_phone')||{}).value || '').trim();
+  const dep  = ((document.getElementById('bk_dep')  ||{}).value || '');
+  const ret  = ((document.getElementById('bk_ret')  ||{}).value || '');
+  const code = (document.getElementById('waitCode') || {}).textContent || '';
+  const total = p.total ? '$' + (fmt ? fmt(p.total) : p.total) + ' USD' : '—';
+  const method = PAY_METHODS.find(m => m.id === _bkState.payM);
+
+  const subject = `Travencia Booking ${code} — ${dest ? dest.name : 'Trip'} — ${total}`;
+  const body = [
+    'Hello Travencia Team,',
+    '',
+    'I have completed a booking on your website. Please find the details below.',
+    '',
+    `Reservation Code: ${code}`,
+    `Destination:      ${dest ? dest.name + ', ' + dest.country : '—'}`,
+    `Dates:            ${dep} → ${ret}`,
+    `Name:             ${fn} ${ln}`,
+    `Email:            ${em}`,
+    `WhatsApp:         ${ph || '—'}`,
+    `Payment Method:   ${method ? method.label : (_bkState.payM || '—')}`,
+    `Total Amount:     ${total}`,
+    '',
+    'Please confirm my reservation at your earliest convenience.',
+    '',
+    'Thank you!'
+  ].join('\n');
+
+  const adminMail = (window.TV && window.TV.ADMIN_EMAIL) || 'travenciaagency@gmail.com';
+  window.location.href = 'mailto:' + adminMail + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
+  // Show feedback under the button
+  const fb = document.getElementById('waitEmailFeedback');
+  if (fb) {
+    fb.textContent = '✉️ Your email app has opened with the booking details pre-filled. Send it to complete your request.';
+    fb.style.display = 'block';
+  }
+  if (btn) { btn.textContent = '✓ Email Opened'; btn.disabled = true; }
 }
 
 function _newReservation() {
-  document.getElementById('waitOver').classList.remove('open');
+  _closeWaitOver();
   openBooking(null);
 }
 
