@@ -3552,14 +3552,12 @@
             📸 Take a screenshot of this page and send it to our admin via WhatsApp to confirm your booking.
           </div>
           <div id="wcResList" style="width:100%;max-width:520px;margin-bottom:18px"></div>
-          <div id="wcEmailSentNote" style="display:none;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);border-radius:8px;padding:10px 16px;font-size:.8rem;color:#34d399;max-width:400px;margin:0 auto 14px;text-align:center">
-            ✅ Confirmation email sent to your inbox!
-          </div>
           <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
             <button class="wa-btn" style="width:auto;padding:12px 28px" onclick="(function(){ if(window._wcLastBookingData){ sendWCPaymentWA(document.getElementById('wcSuccessCode').textContent, window._wcLastBookingData); } })()">📸 Send to Admin via WhatsApp</button>
-            <button class="btn-outline" style="padding:12px 28px" onclick="resendWCEmail()">✉️ Resend Confirmation Email</button>
+            <button class="btn-outline" style="padding:12px 28px" onclick="sendWCPaymentEmail()">✉️ Send via Email</button>
             <button class="btn-outline" id="wcSuccessClose" onclick="closeWCModal()">Close</button>
           </div>
+          <div id="wcEmailFeedback" style="display:none;margin-top:10px;font-size:.8rem;color:#86efac;text-align:center"></div>
         </div>
       </div>
     </div>
@@ -5648,10 +5646,6 @@
 
           document.getElementById("wcmWizard").style.display = "none";
           document.getElementById("wcSuccess").classList.add("show");
-          // Show email confirmation note
-          window._wcBookingEmail = em;
-          const emailNote = document.getElementById("wcEmailSentNote");
-          if (emailNote) emailNote.style.display = "block";
 
           // ── Auto-redirect to agent WhatsApp with booking summary ──
           // Uses sendWCPaymentWA (mirrors booking.js _sendPaymentWA logic)
@@ -5679,25 +5673,39 @@
         }
       }
 
-      // Resend confirmation email via contact endpoint
-      async function resendWCEmail() {
-        const email = window._wcBookingEmail || '';
-        const code  = document.getElementById('wcSuccessCode')?.textContent || '';
-        if (!email) return;
-        try {
-          await fetch(API + '/api/contact', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              first_name: window._wcLastBookingData?.fn || 'Guest',
-              email,
-              message: `Please resend confirmation email for booking ${code}.`,
-              subject: 'Resend Confirmation',
-            })
-          });
-          const note = document.getElementById('wcEmailSentNote');
-          if (note) { note.style.display = 'block'; note.textContent = '✅ Confirmation email re-sent to ' + email; }
-        } catch(e) {}
+      // ── Send booking details by email (mailto — mirrors booking.js) ──────
+      function sendWCPaymentEmail() {
+        const d       = window._wcLastBookingData || {};
+        const code    = document.getElementById('wcSuccessCode')?.textContent || '';
+        const adminEmail = (window.TV && window.TV.ADMIN_EMAIL) || document.querySelector('meta[name="tv-email"]')?.content || 'travenciaagency@gmail.com';
+        const fmt     = (window.TV && window.TV.fmt) || function(n){ return Number(n).toLocaleString('en-US',{maximumFractionDigits:0}); };
+        const pkg     = wcCurrentPkg ? wcCurrentPkg.name : 'World Cup 2026';
+        const total   = d.total ? '$' + fmt(d.total) + ' USD' : '—';
+        const subject = `Travencia WC Booking ${code} — ${pkg} — ${total}`;
+        const body = [
+          'Hello Travencia Team,',
+          '',
+          'I have completed a World Cup 2026 booking. Please find the details below.',
+          '',
+          `Reservation Code: ${code}`,
+          `Package:          ${pkg}`,
+          `Category:         ${d.catLabel || d.catV || '—'}`,
+          `Name:             ${d.fn || ''} ${d.ln || ''}`,
+          `Email:            ${d.em || ''}`,
+          `WhatsApp:         ${d.wa || '—'}`,
+          `Passengers:       ${d.pax || 1}`,
+          `Payment Method:   ${d.payMethod || '—'}`,
+          `Total Amount:     ${total}`,
+          '',
+          'Please confirm my reservation at your earliest convenience.',
+          '',
+          'Thank you!'
+        ].join('\n');
+
+        window.location.href = 'mailto:' + adminEmail + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+
+        const fb = document.getElementById('wcEmailFeedback');
+        if (fb) { fb.textContent = '✉️ Your email app has opened with the booking details pre-filled. Send it to complete your request.'; fb.style.display = 'block'; }
       }
 
       // Compatibility stubs
