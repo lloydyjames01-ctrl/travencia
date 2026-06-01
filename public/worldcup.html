@@ -5687,6 +5687,8 @@
 
       // ══ INIT ════════════════════════════════════════════════════════════
       wcInitAuth();
+      // Track page visit
+      try { fetch(API + '/api/track/visit', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ page: 'worldcup.html' }) }); } catch(e) {}
     </script>
 
     <!-- ══════════ MY BOOKINGS MODAL ══════════ -->

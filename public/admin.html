@@ -164,31 +164,7 @@ td{padding:11px 14px;vertical-align:middle;font-size:.83rem}
 .section{display:none}
 .section.active{display:block}
 
-/* ── Agent cards ─────────────────────────────────────────── */
-.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px}
-.agent-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
-.agent-card:hover{border-color:var(--sky);transform:translateY(-2px);box-shadow:0 8px 32px rgba(45,114,210,.15)}
-.agent-card.selected{border-color:var(--gold2);background:rgba(232,176,48,.04)}
-.agent-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--sky),var(--blue2))}
-.agent-card.selected::before{background:linear-gradient(90deg,var(--gold),var(--gold2))}
-.agent-name{font-family:var(--disp);font-size:1.15rem;color:var(--white);letter-spacing:.06em;margin-bottom:4px}
-.agent-ref{font-size:.68rem;color:var(--muted);font-family:monospace;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
-.agent-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.ag-stat{background:rgba(255,255,255,.03);border-radius:8px;padding:10px 12px}
-.ag-stat-val{font-family:var(--disp);font-size:1.4rem;letter-spacing:.04em;line-height:1}
-.ag-stat-lbl{font-size:.65rem;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.06em}
-.ag-revenue{border-top:1px solid var(--border);padding-top:12px;display:flex;justify-content:space-between;align-items:baseline}
-.ag-rev-val{font-family:var(--disp);font-size:1.6rem;color:var(--gold2);letter-spacing:.04em}
-.ag-rev-lbl{font-size:.7rem;color:var(--muted)}
-.ag-pending-rev{font-size:.75rem;color:#fbbf24;margin-top:2px}
-.agent-bk-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.agent-bk-title{font-family:var(--disp);font-size:1.2rem;color:var(--white);letter-spacing:.06em}
-.agent-bk-back{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:7px 16px;color:var(--text);cursor:pointer;font-family:var(--font);font-size:.82rem;font-weight:600;transition:all .2s}
-.agent-bk-back:hover{background:rgba(45,114,210,.15)}
-.agent-summary-bar{display:flex;gap:16px;flex-wrap:wrap;background:rgba(232,176,48,.04);border:1px solid rgba(232,176,48,.2);border-radius:10px;padding:14px 18px;margin-bottom:18px}
-.asb-item{display:flex;flex-direction:column;gap:2px}
-.asb-val{font-family:var(--disp);font-size:1.3rem;color:var(--gold2);letter-spacing:.04em}
-.asb-lbl{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+
 
 /* ── Amount colors ───────────────────────────────────────── */
 .amount-gold{color:var(--gold2);font-weight:700;font-family:monospace}
@@ -307,10 +283,7 @@ td{padding:11px 14px;vertical-align:middle;font-size:.83rem}
         <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         Users
       </div>
-      <div class="nav-item" data-page="agents" onclick="gotoPage('agents')">
-        <svg viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
-        Agent Stats
-      </div>
+
     </nav>
     <div class="sb-foot">
       <div style="font-size:.75rem;color:var(--muted);margin-bottom:10px" id="sb_user">—</div>
@@ -376,17 +349,7 @@ td{padding:11px 14px;vertical-align:middle;font-size:.83rem}
       <div id="usersTable"><div class="loading"><div class="spinner"></div>Loading…</div></div>
     </div>
 
-    <!-- AGENTS -->
-    <div class="section" id="page-agents">
-      <div class="page-header">
-        <div><div class="page-title">Agent <span style="color:var(--gold2)">Performance</span></div><div class="page-sub" id="agents_sub">Bookings & revenue per referral link</div></div>
-        <button class="btn-icon blue" onclick="loadAgents()"><svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>Refresh</button>
-      </div>
-      <!-- overview cards -->
-      <div id="agentCards"><div class="loading"><div class="spinner"></div>Loading…</div></div>
-      <!-- per-agent bookings drill-down -->
-      <div id="agentDetail" style="display:none"></div>
-    </div>
+
 
   </main>
 </div>
@@ -462,7 +425,6 @@ function gotoPage(p) {
   if (p === 'vehicles')     loadVehicles();
   if (p === 'contacts')     loadContacts();
   if (p === 'users')        loadUsers();
-  if (p === 'agents')       loadAgents();
 }
 
 // ── API helper ─────────────────────────────────────────────
@@ -515,6 +477,8 @@ async function loadStats() {
       <div class="stat-card green"><div class="stat-val">${d.confirmed}</div><div class="stat-lbl">Confirmed</div></div>
       <div class="stat-card red"><div class="stat-val">${d.cancelled}</div><div class="stat-lbl">Cancelled</div></div>
       <div class="stat-card blue"><div class="stat-val">${d.new_contacts}</div><div class="stat-lbl">New Messages</div></div>
+      <div class="stat-card gold"><div class="stat-val">${d.visits_today||0}</div><div class="stat-lbl">Site Visits Today</div></div>
+      <div class="stat-card blue"><div class="stat-val">${fmt(d.visits_total||0)}</div><div class="stat-lbl">Total Site Visits</div></div>
     `;
     // Load recent reservations
     const jr = await api('/api/admin/reservations?limit=10&page=1');
@@ -550,7 +514,7 @@ function buildResTable(rows, showActions) {
   return `<div class="table-wrap"><table>
     <thead><tr>
       <th>Code</th><th>Guest</th><th>Destination</th><th>Dates</th>
-      <th>Pax</th><th>Total</th><th>Payment</th><th>Ref</th><th>Status</th><th>Created</th>
+      <th>Pax</th><th>Total</th><th>Payment</th><th>Status</th><th>Created</th>
       ${showActions ? '<th>Actions</th>' : ''}
     </tr></thead>
     <tbody>
@@ -562,7 +526,6 @@ function buildResTable(rows, showActions) {
       <td data-label="Pax">${(r.num_adults||1) + (r.num_children||0)}</td>
       <td data-label="Total"><span class="amount-gold">$${fmt(r.total_amount)}</span></td>
       <td data-label="Payment"><div class="td-muted">${r.payment_method||'—'}</div></td>
-      <td data-label="Ref">${r.ref ? `<span style="font-family:monospace;font-size:.72rem;color:var(--sky2);background:rgba(45,114,210,.12);padding:2px 7px;border-radius:4px">${r.ref}</span><div class="td-muted" style="font-size:.7rem;margin-top:2px">${AGENT_LABELS[r.ref]||''}</div>` : '<span class="td-muted">—</span>'}</td>
       <td data-label="Status">${badge(r.status)}</td>
       <td data-label="Created"><div class="td-muted">${fmtDT(r.created_at)}</div></td>
       ${showActions ? `<td><div class="actions">
@@ -629,7 +592,6 @@ async function viewRes(id) {
           <div class="detail-grid">
             <div class="detail-item"><div class="di-label">Booked At</div><div class="di-value">${fmtDT(r.created_at)}</div></div>
             <div class="detail-item"><div class="di-label">Last Updated</div><div class="di-value">${fmtDT(r.updated_at)}</div></div>
-            <div class="detail-item"><div class="di-label">Agent Ref</div><div class="di-value" style="color:var(--sky2);font-family:monospace">${r.ref ? r.ref + '<span style="font-family:var(--font);color:var(--gold2);font-size:.8rem;margin-left:8px;font-weight:700">' + (AGENT_LABELS[r.ref]||'') + '</span>' : '— direct'}</div></div>
             <div class="detail-item"><div class="di-label">IP Address</div><div class="di-value">${r.ip_address||'—'}</div></div>
           </div>
         </div>
@@ -714,126 +676,6 @@ async function deleteVeh(id, code) {
     await api(`/api/admin/vehicles/${id}`, { method: 'DELETE' });
     toast('Deleted.', 'ok'); loadVehicles();
   } catch(e) { toast(e.message, 'err'); }
-}
-
-// ── AGENTS ─────────────────────────────────────────────────
-const AGENT_LABELS = {
-  agent1: 'Famous',
-  agent2: 'Casteletto',
-  agent3: 'JD saint',
-  agent4: 'choco',
-  agent5: 'Mr parfait',
-  agent6: 'SMIG',
-  agent7: 'Jason',
-  agent8: 'Agent 8',
-  __direct__: 'Direct (no ref)'
-};
-let _agentData = [];
-
-async function loadAgents() {
-  document.getElementById('agentCards').innerHTML = '<div class="loading"><div class="spinner"></div>Loading…</div>';
-  document.getElementById('agentDetail').style.display = 'none';
-  try {
-    const j = await api('/api/admin/agents');
-    _agentData = j.data;
-    renderAgentCards();
-  } catch(e) {
-    document.getElementById('agentCards').innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`;
-  }
-}
-
-function renderAgentCards() {
-  const wrap = document.getElementById('agentCards');
-  if (!_agentData.length) {
-    wrap.innerHTML = '<div class="table-wrap"><div class="empty"><p>No bookings with ref links yet</p></div></div>';
-    return;
-  }
-  const totalRev = _agentData.reduce((s,a) => s + Number(a.confirmed_revenue||0), 0);
-  document.getElementById('agents_sub').textContent =
-    _agentData.length + ' source(s) · $' + fmt(totalRev) + ' confirmed revenue total';
-
-  wrap.innerHTML = '<div class="agent-grid">' + _agentData.map(a => {
-    const name   = AGENT_LABELS[a.ref] || a.ref;
-    const isDirect = a.ref === '__direct__';
-    const shareP = totalRev > 0 ? Math.round(Number(a.confirmed_revenue) / totalRev * 100) : 0;
-    return `<div class="agent-card${isDirect?' direct':''}" onclick="drillAgent('${a.ref}','${name}',this)" id="agc_${a.ref}">
-      <div class="agent-name">${name}</div>
-      <div class="agent-ref">${isDirect ? 'no ?ref= param' : '?ref=' + a.ref}</div>
-      <div class="agent-stats">
-        <div class="ag-stat"><div class="ag-stat-val" style="color:#fbbf24">${a.pending||0}</div><div class="ag-stat-lbl">Pending</div></div>
-        <div class="ag-stat"><div class="ag-stat-val" style="color:#34d399">${a.confirmed||0}</div><div class="ag-stat-lbl">Confirmed</div></div>
-        <div class="ag-stat"><div class="ag-stat-val" style="color:var(--sky2)">${a.completed||0}</div><div class="ag-stat-lbl">Completed</div></div>
-        <div class="ag-stat"><div class="ag-stat-val" style="color:var(--danger)">${a.cancelled||0}</div><div class="ag-stat-lbl">Cancelled</div></div>
-      </div>
-      <div class="ag-revenue">
-        <div>
-          <div class="ag-rev-val">$${fmt(a.confirmed_revenue||0)}</div>
-          <div class="ag-rev-lbl">Confirmed revenue (${shareP}% of total)</div>
-          ${Number(a.pending_revenue) > 0 ? `<div class="ag-pending-rev">+ $${fmt(a.pending_revenue)} pending</div>` : ''}
-        </div>
-        <div style="text-align:right">
-          <div style="font-family:var(--disp);font-size:1.1rem;color:var(--text)">${a.total_bookings}</div>
-          <div style="font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">bookings</div>
-        </div>
-      </div>
-    </div>`;
-  }).join('') + '</div>';
-}
-
-async function drillAgent(ref, name, cardEl) {
-  // Toggle: clicking same card again collapses
-  document.querySelectorAll('.agent-card').forEach(c => c.classList.remove('selected'));
-  const detail = document.getElementById('agentDetail');
-  if (detail.dataset.ref === ref && detail.style.display !== 'none') {
-    detail.style.display = 'none';
-    detail.dataset.ref = '';
-    return;
-  }
-  cardEl.classList.add('selected');
-  detail.style.display = 'block';
-  detail.dataset.ref = ref;
-  detail.innerHTML = '<div class="loading"><div class="spinner"></div>Loading bookings…</div>';
-  detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  try {
-    const j = await api('/api/admin/agents?ref=' + encodeURIComponent(ref));
-    const agent = _agentData.find(a => a.ref === ref) || {};
-    const rows  = j.bookings || [];
-    detail.innerHTML = `
-      <div class="agent-bk-header">
-        <div class="agent-bk-title">${name} — All Bookings</div>
-        <button class="agent-bk-back" onclick="document.getElementById('agentDetail').style.display='none';document.querySelectorAll('.agent-card').forEach(c=>c.classList.remove('selected'))">✕ Close</button>
-      </div>
-      <div class="agent-summary-bar">
-        <div class="asb-item"><div class="asb-val">$${fmt(agent.confirmed_revenue||0)}</div><div class="asb-lbl">Confirmed Revenue</div></div>
-        <div class="asb-item"><div class="asb-val" style="color:#fbbf24">$${fmt(agent.pending_revenue||0)}</div><div class="asb-lbl">Pending Revenue</div></div>
-        <div class="asb-item"><div class="asb-val">${agent.total_bookings||0}</div><div class="asb-lbl">Total Bookings</div></div>
-        <div class="asb-item"><div class="asb-val" style="color:#34d399">${agent.confirmed||0}</div><div class="asb-lbl">Confirmed</div></div>
-        <div class="asb-item"><div class="asb-val" style="color:#fbbf24">${agent.pending||0}</div><div class="asb-lbl">Pending</div></div>
-        <div class="asb-item"><div class="asb-val" style="color:var(--danger)">${agent.cancelled||0}</div><div class="asb-lbl">Cancelled</div></div>
-      </div>
-      ${rows.length === 0
-        ? '<div class="table-wrap"><div class="empty"><p>No bookings for this agent yet</p></div></div>'
-        : `<div class="table-wrap"><table>
-            <thead><tr><th>Code</th><th>Guest</th><th>Destination</th><th>Dates</th><th>Pax</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
-            <tbody>${rows.map(r => `<tr>
-              <td data-label="Code"><div class="td-code">${r.reservation_code}</div></td>
-              <td data-label="Guest"><div class="td-name">${r.first_name} ${r.last_name}</div><div class="td-muted">${r.email}</div></td>
-              <td data-label="Destination">${r.dest_name||'—'}</td>
-              <td data-label="Dates"><div class="td-muted">${fmtDate(r.departure_date)} → ${fmtDate(r.return_date)}</div></td>
-              <td data-label="Pax">${(r.num_adults||1)+(r.num_children||0)}</td>
-              <td data-label="Total"><span class="amount-gold">$${fmt(r.total_amount)}</span></td>
-              <td data-label="Payment"><div class="td-muted">${r.payment_method||'—'}</div></td>
-              <td data-label="Status">${badge(r.status)}</td>
-              <td data-label="Date"><div class="td-muted">${fmtDT(r.created_at)}</div></td>
-              <td><div class="actions">
-                <button class="btn-icon blue" onclick="viewRes(${r.id})"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View</button>
-              </div></td>
-            </tr>`).join('')}</tbody>
-           </table></div>`
-      }`;
-  } catch(e) {
-    detail.innerHTML = `<div style="color:var(--danger);padding:20px">${e.message}</div>`;
-  }
 }
 
 // ── CONTACTS ───────────────────────────────────────────────

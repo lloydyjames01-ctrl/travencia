@@ -80,6 +80,8 @@ input,select,textarea{font-family:var(--font)}
 .btn-ghost:hover{color:var(--white);border-color:var(--sky2);background:rgba(45,114,210,.08)}
 .btn-gold{display:inline-flex;align-items:center;gap:8px;padding:11px 26px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:var(--navy);border:none;border-radius:8px;font-weight:700;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;transition:opacity .2s,transform .2s;cursor:pointer}
 .btn-gold:hover{opacity:.9;transform:translateY(-1px)}
+.btn-whatsapp{display:inline-flex;align-items:center;gap:8px;padding:11px 26px;background:linear-gradient(135deg,#25D366,#1ab854);color:#fff;border:none;border-radius:8px;font-weight:700;font-size:.85rem;letter-spacing:.06em;text-transform:uppercase;transition:opacity .2s,transform .2s,box-shadow .2s;cursor:pointer;text-decoration:none}
+.btn-whatsapp:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 8px 24px rgba(37,211,102,.35)}
 .btn-sm-outline{padding:8px 18px;border:1.5px solid rgba(45,114,210,.35);border-radius:6px;color:var(--sky2);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;background:transparent;cursor:pointer;transition:all .3s;font-family:inherit}
 .btn-sm-outline:hover{background:rgba(45,114,210,.12);border-color:var(--sky2);color:var(--white)}
 
