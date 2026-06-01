@@ -77,6 +77,27 @@ function emailBase(body) {
   </div></body></html>`;
 }
 
+function emailBookingReceived(res) {
+  const rows = [
+    ['Booking Code',  res.reservation_code],
+    ['Destination',   res.dest_name || res.dest_name_override || '—'],
+    ['Departure',     res.departure_date],
+    ['Return',        res.return_date],
+    ['Guests',        `${res.num_adults} adult(s)${res.num_children ? ' + ' + res.num_children + ' child(ren)' : ''}`],
+    ['Payment',       res.payment_method],
+  ].map(([l,v]) => `<div class="row"><span class="lbl">${l}</span><span class="val">${v}</span></div>`).join('');
+  return emailBase(`
+    <div class="card">
+      <span class="badge badge-pend">Received</span>
+      <h2>✈️ Your Booking is Received!</h2>
+      <p style="margin-bottom:16px;line-height:1.7">Hi <strong style="color:#E8B030">${res.first_name}</strong>, we've received your booking request. Our team will review it and confirm within <strong>2 hours</strong>.</p>
+      ${rows}
+      <div class="total"><div class="total-lbl">Total Amount</div><div class="total-val">$${Number(res.total_amount||0).toLocaleString()} USD</div></div>
+      <p style="margin-top:16px;font-size:.82rem;color:#7A90B8">📸 Please send your payment screenshot to us on WhatsApp to speed up confirmation.</p>
+      <a class="cta cta-green" href="https://wa.me/${(ADMIN_PHONE||'').replace(/\D/g,'')}">Send Payment Screenshot</a>
+    </div>`);
+}
+
 function emailNewBooking(res) {
   const rows = [
     ['Code',          res.reservation_code],
@@ -172,11 +193,24 @@ const db = mysql.createPool({
 });
 
 async function ensureSchema() {
-  try {
-    await db.query(`ALTER TABLE reservations ADD COLUMN IF NOT EXISTS dest_name_override VARCHAR(160) NULL AFTER destination_id`);
-  } catch (e) {
-    if (!String(e.message).includes('Duplicate column') && !String(e.message).includes('IF NOT EXISTS')) {
-      console.warn('[schema]', e.message);
+  const migrations = [
+    `ALTER TABLE reservations ADD COLUMN IF NOT EXISTS dest_name_override VARCHAR(160) NULL AFTER destination_id`,
+    `CREATE TABLE IF NOT EXISTS site_visits (
+      id         INT AUTO_INCREMENT PRIMARY KEY,
+      page       VARCHAR(120) NOT NULL DEFAULT '/',
+      ip_address VARCHAR(45),
+      user_agent VARCHAR(255),
+      visited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_page (page),
+      INDEX idx_visited (visited_at)
+    )`,
+  ];
+  for (const sql of migrations) {
+    try { await db.query(sql); }
+    catch (e) {
+      if (!String(e.message).includes('Duplicate column') && !String(e.message).includes('IF NOT EXISTS')) {
+        console.warn('[schema]', e.message);
+      }
     }
   }
 }
@@ -389,10 +423,17 @@ app.post('/api/reservations', authMiddleware, async (req, res) => {
          WHERE r.id=?`, [result.insertId]
       );
       if (resRow) {
+        // Email admin
         sendMail({
           to: ADMIN_EMAIL,
           subject: `[Travencia] New Booking ${code} — ${resRow.dest_name} — $${resRow.total_amount}`,
           html: emailNewBooking(resRow)
+        });
+        // Email customer confirmation
+        sendMail({
+          to: resRow.email,
+          subject: `Travencia — Booking Received: ${code}`,
+          html: emailBookingReceived(resRow)
         });
       }
     } catch(e){ console.warn('[notify]', e.message); }
@@ -430,6 +471,18 @@ app.get('/api/reservations/status/:code', async (req, res) => {
     if (!row) return res.status(404).json({ success: false, error: 'Not found' });
     res.json({ success: true, data: row });
   } catch (e) { res.status(500).json({ success: false, error: e.message }); }
+});
+
+// Site visit tracking (called from each page on load)
+app.post('/api/track/visit', async (req, res) => {
+  try {
+    const page = String(req.body.page || '/').substring(0, 120);
+    await db.query(
+      'INSERT INTO site_visits (page, ip_address, user_agent) VALUES (?,?,?)',
+      [page, req.ip, (req.headers['user-agent'] || '').substring(0, 255)]
+    );
+    res.json({ success: true });
+  } catch (e) { res.json({ success: false }); } // silent fail
 });
 
 // Contact form
@@ -642,11 +695,16 @@ app.get('/api/admin/stats', adminOnly, async (req, res) => {
     );
     const [[contacts]] = await db.query("SELECT COUNT(*) AS total FROM contact_inquiries WHERE status='new'");
     const [[vehicles]] = await db.query("SELECT COUNT(*) AS total FROM vehicle_bookings WHERE status='pending'");
-    res.json({ success: true, data: { ...totals, new_contacts: contacts.total, pending_vehicles: vehicles.total } });
+    // Site visit stats
+    let visits_today = 0, visits_total = 0;
+    try {
+      const [[vt]] = await db.query("SELECT COUNT(*) AS total FROM site_visits WHERE DATE(visited_at)=CURDATE()");
+      const [[va]] = await db.query("SELECT COUNT(*) AS total FROM site_visits");
+      visits_today = vt.total; visits_total = va.total;
+    } catch(e) { /* table may not exist yet */ }
+    res.json({ success: true, data: { ...totals, new_contacts: contacts.total, pending_vehicles: vehicles.total, visits_today, visits_total } });
   } catch (e) { res.status(500).json({ success: false, error: e.message }); }
 });
-
-// Agent stats endpoint removed (no agent system in v2)
 
 // GET all users (admin)
 app.get('/api/admin/users', adminOnly, async (req, res) => {
