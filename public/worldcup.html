@@ -3552,8 +3552,12 @@
             📸 Take a screenshot of this page and send it to our admin via WhatsApp to confirm your booking.
           </div>
           <div id="wcResList" style="width:100%;max-width:520px;margin-bottom:18px"></div>
+          <div id="wcEmailSentNote" style="display:none;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.25);border-radius:8px;padding:10px 16px;font-size:.8rem;color:#34d399;max-width:400px;margin:0 auto 14px;text-align:center">
+            ✅ Confirmation email sent to your inbox!
+          </div>
           <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
             <button class="wa-btn" style="width:auto;padding:12px 28px" onclick="(function(){ if(window._wcLastBookingData){ sendWCPaymentWA(document.getElementById('wcSuccessCode').textContent, window._wcLastBookingData); } })()">📸 Send to Admin via WhatsApp</button>
+            <button class="btn-outline" style="padding:12px 28px" onclick="resendWCEmail()">✉️ Resend Confirmation Email</button>
             <button class="btn-outline" id="wcSuccessClose" onclick="closeWCModal()">Close</button>
           </div>
         </div>
@@ -5644,6 +5648,10 @@
 
           document.getElementById("wcmWizard").style.display = "none";
           document.getElementById("wcSuccess").classList.add("show");
+          // Show email confirmation note
+          window._wcBookingEmail = em;
+          const emailNote = document.getElementById("wcEmailSentNote");
+          if (emailNote) emailNote.style.display = "block";
 
           // ── Auto-redirect to agent WhatsApp with booking summary ──
           // Uses sendWCPaymentWA (mirrors booking.js _sendPaymentWA logic)
@@ -5671,6 +5679,27 @@
         }
       }
 
+      // Resend confirmation email via contact endpoint
+      async function resendWCEmail() {
+        const email = window._wcBookingEmail || '';
+        const code  = document.getElementById('wcSuccessCode')?.textContent || '';
+        if (!email) return;
+        try {
+          await fetch(API + '/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              first_name: window._wcLastBookingData?.fn || 'Guest',
+              email,
+              message: `Please resend confirmation email for booking ${code}.`,
+              subject: 'Resend Confirmation',
+            })
+          });
+          const note = document.getElementById('wcEmailSentNote');
+          if (note) { note.style.display = 'block'; note.textContent = '✅ Confirmation email re-sent to ' + email; }
+        } catch(e) {}
+      }
+
       // Compatibility stubs
       function wcPayFields() {}
       function wcFormatCard(el) {}
@@ -5687,8 +5716,6 @@
 
       // ══ INIT ════════════════════════════════════════════════════════════
       wcInitAuth();
-      // Track page visit
-      try { fetch(API + '/api/track/visit', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ page: 'worldcup.html' }) }); } catch(e) {}
     </script>
 
     <!-- ══════════ MY BOOKINGS MODAL ══════════ -->
