@@ -2,10 +2,9 @@
    TRAVENCIA — Shared Data
 ============================================================ */
 
-// ⚠️ REPLACE THIS with your WhatsApp number (digits only, no + or spaces, e.g. 12025551234)
 const ADMIN_WHATSAPP = (function(){
   var m = document.querySelector('meta[name="tv-wa"]');
-  return m ? m.content : "REPLACE_WITH_WHATSAPP_NUMBER";
+  return m ? m.content : "13082533668";
 })();
 const ADMIN_EMAIL = "travenciaagency@gmail.com";
 const REF_AGENTS = {}; // No agent system in this deployment
@@ -1335,7 +1334,6 @@ window.TV = {
   FLIGHT_BASE,
   DEST_PREMIUM,
   ADMIN_WHATSAPP,
-
   REF_AGENTS,
 };
 

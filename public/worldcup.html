@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-      <meta name="tv-wa" content="REPLACE_WITH_WHATSAPP_NUMBER"/>
+      <meta name="tv-wa" content="13082533668"/>
   <meta name="tv-email" content="travenciaagency@gmail.com"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>FIFA World Cup 2026 - Travencia Official Packages</title>
@@ -2245,7 +2245,7 @@
           Book Now
         </button>
       </div>
-      <button class="nb-ham" id="nbHamburger" aria-label="Menu" aria-expanded="false"></nav>#9776;</button>
+      <button class="nb-ham" id="nbHamburger" aria-label="Menu" aria-expanded="false">&#9776;</button>
 </nav>
 
     <section id="wc-hero">
@@ -3762,6 +3762,32 @@
           .getElementById("nb")
           .classList.toggle("scrolled", scrollY > 30),
       );
+
+      // ══ HAMBURGER MENU ═══════════════════════════════════════════════════
+      (function(){
+        var ham = document.getElementById('nbHamburger');
+        var links = document.getElementById('nbLinks');
+        if(!ham||!links) return;
+        ham.addEventListener('click', function(){
+          var open = links.classList.toggle('open');
+          ham.setAttribute('aria-expanded', open?'true':'false');
+          ham.innerHTML = open ? '&#10005;' : '&#9776;';
+        });
+        links.querySelectorAll('a').forEach(function(a){
+          a.addEventListener('click', function(){
+            links.classList.remove('open');
+            ham.setAttribute('aria-expanded','false');
+            ham.innerHTML = '&#9776;';
+          });
+        });
+        document.addEventListener('click', function(e){
+          if(!ham.contains(e.target) && !links.contains(e.target)){
+            links.classList.remove('open');
+            ham.setAttribute('aria-expanded','false');
+            ham.innerHTML = '&#9776;';
+          }
+        });
+      })();
 
       // ══ REVEAL ANIMATIONS ════════════════════════════════════════════════
       function observeReveal() {

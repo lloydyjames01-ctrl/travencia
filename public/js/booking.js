@@ -107,6 +107,15 @@ function _ensureModal() {
     border-radius:10px; border:none; cursor:pointer; display:flex; align-items:center;
     justify-content:center; gap:10px; transition:all .3s; margin-bottom:12px; }
   .wa-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(37,211,102,.25); }
+  .email-btn { width:100%; padding:14px; background:linear-gradient(130deg,#2D72D2,#1340A0);
+    color:#fff; font-size:.9rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    border-radius:10px; border:none; cursor:pointer; display:flex; align-items:center;
+    justify-content:center; gap:10px; transition:all .3s; margin-bottom:12px; font-family:inherit; }
+  .email-btn:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(45,114,210,.3); }
+  .email-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+  .send-divider { display:flex; align-items:center; gap:10px; margin:4px 0 12px; }
+  .send-divider::before,.send-divider::after { content:''; flex:1; height:1px; background:rgba(45,114,210,.15); }
+  .send-divider span { font-size:.65rem; letter-spacing:.14em; text-transform:uppercase; color:var(--faint,#3A4F72); }
 
   /* ── Confirm note ── */
   .confirm-note { background:rgba(45,114,210,.06); border:1px solid rgba(45,114,210,.15);
@@ -276,9 +285,19 @@ function _ensureModal() {
         <p>After confirming, take a screenshot and send it to our admin via WhatsApp to confirm your payment method.</p>
       </div>
     </div>
-    <div class="wcconf-foot">
-      <button class="btn-outline" onclick="_closeConfirmModal()">&#8592; Back</button>
-      <button class="wcm-submit" onclick="_closeConfirmModal();_submitBk();" style="flex:2">Confirm &amp; Book Now</button>
+    <div class="wcconf-foot" style="flex-direction:column;gap:10px">
+      <div style="display:flex;gap:10px;width:100%">
+        <button class="btn-outline" onclick="_closeConfirmModal()" style="flex:1;padding:12px;border-radius:9px;border:1.5px solid rgba(45,114,210,.3);background:transparent;color:var(--sky2,#5ba4f5);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .3s;font-family:inherit">&#8592; Back</button>
+        <button class="wcm-submit" id="bkConfBtnWA" onclick="_closeConfirmModal();_submitBk('whatsapp');" style="flex:2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Confirm &amp; Send via WhatsApp
+        </button>
+      </div>
+      <div class="send-divider"><span>or send details by</span></div>
+      <button class="email-btn" id="bkConfBtnEmail" onclick="_closeConfirmModal();_submitBk('email');">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Confirm &amp; Send via Email
+      </button>
     </div>
   </div>
 </div>
@@ -299,12 +318,20 @@ function _ensureModal() {
     <div style="padding:9px 8px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid rgba(74,222,128,.14);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center">Confirmed</div>
   </div>
   <div style="background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);border-radius:10px;padding:14px 18px;font-size:.8rem;color:#86efac;line-height:1.7;margin:0 auto 18px;max-width:400px;text-align:center">
-    📸 Take a screenshot of this page and send it to our admin via WhatsApp to confirm your booking.
+    📋 Your booking is saved. Send the details to our team to confirm your payment method.
   </div>
   <div id="resList" style="width:100%;max-width:520px;margin-bottom:18px"></div>
-  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
-    <button class="wa-btn" style="width:auto;padding:12px 28px" onclick="_sendPaymentWA()">📸 Send to Admin via WhatsApp</button>
-    <button class="btn-outline" onclick="document.getElementById('waitOver').classList.remove('open')">Close</button>
+  <div style="display:flex;flex-direction:column;gap:10px;max-width:400px;width:100%;align-items:center">
+    <button class="wa-btn" style="width:100%;padding:13px 28px" onclick="_sendPaymentWA()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Send Details via WhatsApp
+    </button>
+    <div class="send-divider" style="width:100%"><span>or</span></div>
+    <button class="email-btn" id="waitEmailBtn" style="width:100%;margin-bottom:0" onclick="_sendPaymentEmail()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Send Details via Email
+    </button>
+    <button class="btn-outline" onclick="document.getElementById('waitOver').classList.remove('open')" style="width:100%">Close</button>
   </div>
 </div>`;
 
@@ -739,7 +766,7 @@ function _sendPaymentWA() {
   );
 
   const msg = parts.filter(Boolean).join('\n');
-  const wa  = (window.TV && window.TV.ADMIN_WHATSAPP) || 'REPLACE_WITH_WHATSAPP_NUMBER';
+  const wa  = (window.TV && window.TV.ADMIN_WHATSAPP) || '13082533668';
   window.open('https://wa.me/' + wa + '?text=' + encodeURIComponent(msg), '_blank');
 }
 
@@ -779,15 +806,15 @@ function _closeConfirmModal() {
 }
 
 // ── Submit booking to API ──────────────────────────────────
-async function _submitBk() {
+async function _submitBk(mode) {
+  // mode: 'whatsapp' | 'email'
   const btn = document.getElementById('bkBtnNext');
-  btn.disabled = true;
-  btn.textContent = 'Submitting…';
+  if (btn) { btn.disabled = true; btn.textContent = 'Submitting…'; }
 
   // If not logged in, show auth modal first
   const tok = typeof getToken === 'function' ? getToken() : '';
   if (!tok) {
-    btn.disabled = false; btn.textContent = 'Confirm & Submit';
+    if (btn) { btn.disabled = false; btn.textContent = 'Confirm & Submit'; }
     _closeM('bookModal');
     if (typeof openAuth === 'function') openAuth('login');
     return;
@@ -805,7 +832,6 @@ async function _submitBk() {
   const { DESTINATIONS } = window.TV || {};
   const dest     = DESTINATIONS ? DESTINATIONS.find(x => x.id === _bkState.destId) : null;
 
-  // Map all payment methods to DB-valid values (schema: mastercard|visa|paypal)
   const PM_MAP = { paypal:'paypal', bank:'paypal', bank_transfer:'paypal',
                    cashapp:'paypal', other:'paypal' };
 
@@ -842,26 +868,32 @@ async function _submitBk() {
     const data = await r.json();
     if (!data.success) {
       if (data.must_login) {
-        btn.disabled = false; btn.textContent = 'Confirm & Submit';
+        if (btn) { btn.disabled = false; btn.textContent = 'Confirm & Submit'; }
         _closeM('bookModal');
         if (typeof openAuth === 'function') openAuth('login');
         return;
       }
-      btn.disabled = false; btn.textContent = 'Confirm & Submit';
+      if (btn) { btn.disabled = false; btn.textContent = 'Confirm & Submit'; }
       _bkErr('bk_err3', data.error || 'Submission failed. Please try again.');
       return;
     }
     const code = data.data.reservation_code;
     _pendRes.push({ code, dest: dest ? dest.name : '', total: p.total || 0 });
-    btn.disabled = false; btn.textContent = 'Confirm & Submit';
+    // Store chosen mode for the success screen
+    _bkState._sendMode = mode || 'whatsapp';
+    if (btn) { btn.disabled = false; btn.textContent = 'Confirm & Submit'; }
     _closeM('bookModal');
     // Show success overlay
-    setTimeout(function() { _showWait(code); }, 400);
-    // Auto-redirect to agent WhatsApp with booking details
-    setTimeout(function() { _sendPaymentWA(); }, 1600);
+    setTimeout(function() { _showWait(code, mode); }, 400);
+    // Auto-trigger chosen send method
+    if (mode === 'email') {
+      setTimeout(function() { _sendPaymentEmail(); }, 1200);
+    } else {
+      setTimeout(function() { _sendPaymentWA(); }, 1600);
+    }
   } catch (err) {
     console.error('[submitBk]', err);
-    btn.disabled = false; btn.textContent = 'Confirm & Submit';
+    if (btn) { btn.disabled = false; btn.textContent = 'Confirm & Submit'; }
     _bkErr('bk_err3', 'Connection error. Please check your internet and try again.');
   }
 }
